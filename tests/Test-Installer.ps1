@@ -6,10 +6,15 @@ $ErrorActionPreference = 'Stop'
 
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $installerPath = Join-Path $repositoryRoot 'Install-ProxyumSpotX.ps1'
+$bootstrapPath = Join-Path $repositoryRoot 'i.ps1'
 $cmdPath = Join-Path $repositoryRoot 'Install.cmd'
 
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
     throw 'Install-ProxyumSpotX.ps1 nao encontrado.'
+}
+
+if (-not (Test-Path -LiteralPath $bootstrapPath -PathType Leaf)) {
+    throw 'i.ps1 nao encontrado.'
 }
 
 if (-not (Test-Path -LiteralPath $cmdPath -PathType Leaf)) {
@@ -27,6 +32,18 @@ $null = [Management.Automation.Language.Parser]::ParseFile(
 if ($parseErrors.Count -gt 0) {
     $messages = $parseErrors | ForEach-Object { $_.Message }
     throw ("Erros de sintaxe: " + ($messages -join '; '))
+}
+
+$bootstrapTokens = $null
+$bootstrapParseErrors = $null
+$null = [Management.Automation.Language.Parser]::ParseFile(
+    $bootstrapPath,
+    [ref]$bootstrapTokens,
+    [ref]$bootstrapParseErrors
+)
+if ($bootstrapParseErrors.Count -gt 0) {
+    $messages = $bootstrapParseErrors | ForEach-Object { $_.Message }
+    throw ("Erros de sintaxe no i.ps1: " + ($messages -join '; '))
 }
 
 $installerContent = Get-Content -LiteralPath $installerPath -Raw
@@ -56,6 +73,20 @@ foreach ($requiredValue in $requiredValues) {
     if (-not $installerContent.Contains($requiredValue)) {
         throw "Valor obrigatorio ausente: $requiredValue"
     }
+}
+
+$bootstrapContent = Get-Content -LiteralPath $bootstrapPath -Raw
+$installerHash = (Get-FileHash -LiteralPath $installerPath -Algorithm SHA256).Hash
+$expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
+if (-not $bootstrapContent.Contains($expectedHashLine)) {
+    throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
+}
+$expectedReleaseLine = '$ReleaseVersion = ''v1.2.1'''
+if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
+    throw 'i.ps1 nao aponta para a release v1.2.1.'
+}
+if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
+    throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'
 }
 
 $cmdContent = Get-Content -LiteralPath $cmdPath -Raw
