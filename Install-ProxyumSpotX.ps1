@@ -23,7 +23,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.0.0'
+$InstallerVersion = '1.0.1'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -87,7 +87,17 @@ try {
     $null = New-Item -ItemType Directory -Path $workDirectory -Force
 
     Write-Host 'Baixando a revisao verificada do SpotX...' -ForegroundColor Cyan
-    Invoke-WebRequest -Uri $SpotXUrl -OutFile $downloadedScript -UseBasicParsing
+    $curlCommand = Get-Command curl.exe -ErrorAction SilentlyContinue
+    if ($curlCommand) {
+        $curlPath = $curlCommand.Source
+        & $curlPath -L --fail --retry 3 --connect-timeout 20 --max-time 180 --silent --show-error $SpotXUrl -o $downloadedScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "Falha ao baixar o SpotX com curl.exe (codigo $LASTEXITCODE)."
+        }
+    }
+    else {
+        Invoke-WebRequest -Uri $SpotXUrl -OutFile $downloadedScript -UseBasicParsing -TimeoutSec 180
+    }
 
     $actualHash = (Get-FileHash -LiteralPath $downloadedScript -Algorithm SHA256).Hash
     if (-not $actualHash.Equals($ExpectedSpotXSha256, [StringComparison]::OrdinalIgnoreCase)) {

@@ -9,10 +9,10 @@ O projeto instala o Spotify `1.2.13.661.ga588f749`, aplica o tema antigo e bloqu
 Abra o Windows PowerShell e execute este comando de qualquer diretório:
 
 ```powershell
-$u='https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/v1.0.0/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; Invoke-WebRequest -UseBasicParsing $u -OutFile $p; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p
+$u='https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/v1.0.1/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; curl.exe -L --fail --retry 3 --connect-timeout 20 --max-time 180 $u -o $p; if ($LASTEXITCODE -ne 0) { throw 'Falha ao baixar o instalador Proxyum.' }; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p
 ```
 
-Não é necessário clonar o repositório nem ter o arquivo no diretório atual. A URL usa a versão fixa `v1.0.0`, evitando alterações silenciosas vindas da branch `main`.
+Não é necessário clonar o repositório nem ter o arquivo no diretório atual. A URL usa a versão fixa `v1.0.1`, evitando alterações silenciosas vindas da branch `main`.
 
 ## Instalação local opcional
 
@@ -25,7 +25,7 @@ Não é necessário clonar o repositório nem ter o arquivo no diretório atual.
 Para instalar diretamente do GitHub com opções, acrescente os parâmetros depois de `$p`:
 
 ```powershell
-$u='https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/v1.0.0/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; Invoke-WebRequest -UseBasicParsing $u -OutFile $p; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p -HidePodcasts -StartSpotify
+$u='https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/v1.0.1/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; curl.exe -L --fail --retry 3 --connect-timeout 20 --max-time 180 $u -o $p; if ($LASTEXITCODE -ne 0) { throw 'Falha ao baixar o instalador Proxyum.' }; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p -HidePodcasts -StartSpotify
 ```
 
 Parâmetros disponíveis:
@@ -50,6 +50,7 @@ O SpotX ainda pode baixar componentes secundários dos serviços upstream durant
 ## Avisos
 
 - Esta versão do Spotify é de 2023 e não recebe as correções de segurança das versões atuais.
+- Se já existir uma versão desktop mais nova, ela será automaticamente rebaixada e sobrescrita pela 1.2.13.661; as pastas Users e o arquivo prefs são preservados.
 - O patch altera arquivos assinados do Spotify; a assinatura do executável modificado deixa de ser válida.
 - Este projeto não é afiliado, patrocinado ou aprovado pelo Spotify.
 - Use por sua conta e risco e respeite os termos aplicáveis ao serviço.
