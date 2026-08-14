@@ -8,6 +8,8 @@ Abra o Windows PowerShell e cole:
 irm https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/i.ps1|iex
 ```
 
+Prefere dar dois cliques? [Baixe o instalador `.bat`](https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/Instalar-ProxyumSpotX.bat).
+
 No menu voce pode instalar, reparar ou remover tudo.
 
 ## Recomendacoes

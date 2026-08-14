@@ -7,6 +7,7 @@ $ErrorActionPreference = 'Stop'
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $installerPath = Join-Path $repositoryRoot 'Install-ProxyumSpotX.ps1'
 $bootstrapPath = Join-Path $repositoryRoot 'i.ps1'
+$batchPath = Join-Path $repositoryRoot 'Instalar-ProxyumSpotX.bat'
 $cmdPath = Join-Path $repositoryRoot 'Install.cmd'
 
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
@@ -15,6 +16,10 @@ if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
 
 if (-not (Test-Path -LiteralPath $bootstrapPath -PathType Leaf)) {
     throw 'i.ps1 nao encontrado.'
+}
+
+if (-not (Test-Path -LiteralPath $batchPath -PathType Leaf)) {
+    throw 'Instalar-ProxyumSpotX.bat nao encontrado.'
 }
 
 if (-not (Test-Path -LiteralPath $cmdPath -PathType Leaf)) {
@@ -81,9 +86,9 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.2.2'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.3.0'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.2.2.'
+    throw 'i.ps1 nao aponta para a release v1.3.0.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'
@@ -97,6 +102,23 @@ $hasUtf8Bom =
     $bootstrapBytes[2] -eq 0xBF
 if ($hasUtf8Bom) {
     throw 'i.ps1 deve ser UTF-8 sem BOM para funcionar com irm | iex no Windows PowerShell 5.1.'
+}
+
+$batchContent = Get-Content -LiteralPath $batchPath -Raw
+if (-not $batchContent.Contains('releases/latest/download/i.ps1')) {
+    throw 'O instalador .bat nao chama o i.ps1 publicado.'
+}
+if (-not $batchContent.Contains('powershell.exe')) {
+    throw 'O instalador .bat nao chama o Windows PowerShell.'
+}
+$batchBytes = [IO.File]::ReadAllBytes($batchPath)
+$batchHasBom =
+    $batchBytes.Length -ge 3 -and
+    $batchBytes[0] -eq 0xEF -and
+    $batchBytes[1] -eq 0xBB -and
+    $batchBytes[2] -eq 0xBF
+if ($batchHasBom) {
+    throw 'Instalar-ProxyumSpotX.bat nao pode possuir BOM.'
 }
 
 $cmdContent = Get-Content -LiteralPath $cmdPath -Raw
@@ -113,6 +135,9 @@ if ($installerBlocks -ne 1) {
 }
 if (-not $readmeContent.Contains('releases/latest/download/i.ps1|iex')) {
     throw 'Comando remoto curto ausente do README.'
+}
+if (-not $readmeContent.Contains('releases/latest/download/Instalar-ProxyumSpotX.bat')) {
+    throw 'Link do instalador .bat ausente do README.'
 }
 
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green

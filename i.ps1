@@ -1,8 +1,8 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$ReleaseVersion = 'v1.2.2'
-$ExpectedSha256 = '7173F4EE227149FFBDA4D1DF109DCC1A9608A27A9F25C66D3D092C482628AE5D'
+$ReleaseVersion = 'v1.3.0'
+$ExpectedSha256 = 'E65EDFD91F74158CCDDAE5F01AB151092FB84BCCAD475AFCE7357C3BA4D3D122'
 $InstallerUrl = "https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/$ReleaseVersion/Install-ProxyumSpotX.ps1"
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
 $tempInstaller = Join-Path $tempRoot ("ProxyumSpotX-Bootstrap-" + [Guid]::NewGuid().ToString('N') + '.ps1')
@@ -39,6 +39,7 @@ try {
 catch {
     Write-Host ''
     Write-Host ("ERRO: " + $_.Exception.Message) -ForegroundColor Red
+    throw
 }
 finally {
     $resolvedFile = [IO.Path]::GetFullPath($tempInstaller)
