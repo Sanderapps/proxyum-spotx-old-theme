@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Instalador Proxyum para Spotify 1.2.13.661 com o perfil Old theme do SpotX.
 
@@ -14,6 +14,8 @@
 
 [CmdletBinding()]
 param(
+    [switch]$Install,
+    [switch]$Uninstall,
     [switch]$HidePodcasts,
     [switch]$KeepHomeContent,
     [switch]$StartSpotify,
@@ -27,7 +29,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.1.0'
+$InstallerVersion = '1.2.0'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -51,6 +53,164 @@ function Assert-Environment {
     if ($PSVersionTable.PSVersion -lt [Version]'5.1') {
         throw 'PowerShell 5.1 ou superior e necessario.'
     }
+}
+
+function Select-MainAction {
+    param(
+        [switch]$Install,
+        [switch]$Uninstall,
+        [switch]$DryRun
+    )
+
+    if ($Install -and $Uninstall) {
+        throw 'Use somente uma opcao: -Install ou -Uninstall.'
+    }
+
+    if ($Install -or $DryRun) { return 'Install' }
+    if ($Uninstall) { return 'Uninstall' }
+
+    Write-Host 'O que voce quer fazer?' -ForegroundColor White
+    Write-Host '  [1] Instalar ou reparar o Proxyum SpotX'
+    Write-Host '  [2] Remover o Proxyum SpotX completamente'
+    Write-Host '  [3] Sair'
+
+    do {
+        $choice = Read-Host 'Escolha 1, 2 ou 3'
+    }
+    while ($choice -notin @('1', '2', '3'))
+
+    if ($choice -eq '1') { return 'Install' }
+    if ($choice -eq '2') { return 'Uninstall' }
+    return 'Exit'
+}
+
+function Remove-SafeSpotifyDirectory {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RootPath
+    )
+
+    $resolvedRoot = [IO.Path]::GetFullPath($RootPath).TrimEnd('\')
+    $targetPath = [IO.Path]::GetFullPath((Join-Path $resolvedRoot 'Spotify')).TrimEnd('\')
+    $expectedPath = $resolvedRoot + '\Spotify'
+
+    if (-not $targetPath.Equals($expectedPath, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Recusa de seguranca: pasta inesperada: $targetPath"
+    }
+
+    if (Test-Path -LiteralPath $targetPath) {
+        Remove-Item -LiteralPath $targetPath -Recurse -Force
+        Write-Host ("  Removido: {0}" -f $targetPath) -ForegroundColor DarkGray
+    }
+}
+
+function Remove-SpotifyShortcut {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (Test-Path -LiteralPath $Path -PathType Leaf) {
+        Remove-Item -LiteralPath $Path -Force
+        Write-Host ("  Removido: {0}" -f $Path) -ForegroundColor DarkGray
+    }
+}
+
+function Get-SpotXTempResidues {
+    $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
+    return @(
+        Get-ChildItem -LiteralPath $tempRoot -Force -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.Name -like 'ProxyumSpotX-*' -or
+                $_.Name -like 'SpotX_Temp-*' -or
+                $_.Name -eq 'Install-ProxyumSpotX.ps1'
+            }
+    )
+}
+
+function Remove-SpotXTempResidues {
+    $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
+
+    foreach ($residue in @(Get-SpotXTempResidues)) {
+        $resolvedPath = [IO.Path]::GetFullPath($residue.FullName).TrimEnd('\')
+        $resolvedParent = [IO.Path]::GetFullPath([IO.Path]::GetDirectoryName($resolvedPath)).TrimEnd('\')
+        $isExpectedName =
+            $residue.Name -like 'ProxyumSpotX-*' -or
+            $residue.Name -like 'SpotX_Temp-*' -or
+            $residue.Name -eq 'Install-ProxyumSpotX.ps1'
+
+        if (-not $resolvedParent.Equals($tempRoot, [StringComparison]::OrdinalIgnoreCase) -or -not $isExpectedName) {
+            throw "Recusa de seguranca: residuo temporario inesperado: $resolvedPath"
+        }
+
+        Remove-Item -LiteralPath $resolvedPath -Recurse -Force
+        Write-Host ("  Removido: {0}" -f $resolvedPath) -ForegroundColor DarkGray
+    }
+}
+
+function Invoke-CompleteRemoval {
+    Write-Host ''
+    Write-Warning 'A remocao completa apaga o Spotify, login local, cache e preferencias deste usuario.'
+    Write-Warning 'Depois disso, sera preciso instalar e entrar na conta novamente.'
+    $confirmation = Read-Host 'Digite REMOVER TUDO para confirmar'
+
+    if ($confirmation -cne 'REMOVER TUDO') {
+        Write-Host 'Remocao cancelada. Nada foi alterado.' -ForegroundColor Yellow
+        return
+    }
+
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Fechando o Spotify (10%)' -PercentComplete 10
+    Get-Process -Name Spotify,SpotifySetup -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Removendo arquivos locais (35%)' -PercentComplete 35
+    Remove-SafeSpotifyDirectory -RootPath $env:APPDATA
+    Remove-SafeSpotifyDirectory -RootPath $env:LOCALAPPDATA
+
+    $programsFolder = [Environment]::GetFolderPath('Programs')
+    $desktopFolder = [Environment]::GetFolderPath('Desktop')
+    $shortcutPaths = @(
+        (Join-Path $programsFolder 'Spotify.lnk'),
+        (Join-Path $desktopFolder 'Spotify.lnk')
+    )
+    $shortcutPaths | ForEach-Object { Remove-SpotifyShortcut -Path $_ }
+
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Limpando configuracoes do Windows (60%)' -PercentComplete 60
+    Remove-ItemProperty -LiteralPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Spotify' -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath 'HKCU:\Software\Spotify' -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Spotify' -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Removendo versao da Microsoft Store (80%)' -PercentComplete 80
+    Get-AppxPackage -Name SpotifyAB.SpotifyMusic -ErrorAction SilentlyContinue | Remove-AppxPackage -ErrorAction SilentlyContinue
+    Remove-SpotXTempResidues
+
+    $remainingPaths = @(
+        (Join-Path $env:APPDATA 'Spotify'),
+        (Join-Path $env:LOCALAPPDATA 'Spotify')
+    ) + $shortcutPaths | Where-Object { Test-Path -LiteralPath $_ }
+    $remainingStorePackage = Get-AppxPackage -Name SpotifyAB.SpotifyMusic -ErrorAction SilentlyContinue
+    $remainingRegistryKeys = @(
+        'HKCU:\Software\Spotify',
+        'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Spotify'
+    ) | Where-Object { Test-Path -LiteralPath $_ }
+    $runProperties = Get-ItemProperty -LiteralPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -ErrorAction SilentlyContinue
+    $remainingRunEntry = $runProperties -and $runProperties.PSObject.Properties.Name -contains 'Spotify'
+    $remainingTempResidues = @(Get-SpotXTempResidues)
+
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Remocao concluida (100%)' -PercentComplete 100
+    Write-Progress -Activity 'Removendo Proxyum SpotX' -Completed
+
+    if ($remainingPaths -or $remainingStorePackage -or $remainingRegistryKeys -or $remainingRunEntry -or $remainingTempResidues) {
+        Write-Warning 'A remocao terminou, mas alguns itens nao puderam ser apagados.'
+        $remainingPaths | ForEach-Object { Write-Warning ("Ainda existe: {0}" -f $_) }
+        $remainingRegistryKeys | ForEach-Object { Write-Warning ("Ainda existe: {0}" -f $_) }
+        $remainingTempResidues | ForEach-Object { Write-Warning ("Ainda existe: {0}" -f $_.FullName) }
+        if ($remainingRunEntry) { Write-Warning 'A entrada de inicializacao do Spotify ainda existe.' }
+        if ($remainingStorePackage) { Write-Warning 'A versao da Microsoft Store ainda esta instalada.' }
+        return
+    }
+
+    Write-Host ''
+    Write-Host '[100%] Proxyum SpotX e Spotify foram removidos deste usuario.' -ForegroundColor Green
 }
 
 function Write-Stage {
@@ -227,8 +387,27 @@ function Remove-VerifiedTempDirectory {
 }
 
 Write-ProxyumHeader
-Write-Stage -Number 1 -Message 'Verificando ambiente e instalacao existente'
 Assert-Environment
+$mainAction = Select-MainAction -Install:$Install -Uninstall:$Uninstall -DryRun:$DryRun
+
+if ($mainAction -eq 'Exit') {
+    Write-Host 'Ate mais.' -ForegroundColor DarkGray
+    return
+}
+
+if ($mainAction -eq 'Uninstall') {
+    try {
+        Invoke-CompleteRemoval
+    }
+    catch {
+        Write-Progress -Activity 'Removendo Proxyum SpotX' -Completed
+        Write-Host ''
+        Write-Host ("ERRO: " + $_.Exception.Message) -ForegroundColor Red
+    }
+    return
+}
+
+Write-Stage -Number 1 -Message 'Verificando ambiente e instalacao existente'
 
 Write-Warning 'Este perfil usa Spotify 1.2.13.661 (2023) para manter o tema antigo.'
 Write-Warning 'O SpotX modifica arquivos assinados do Spotify. Use por sua conta e risco.'

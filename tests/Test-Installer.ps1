@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 Set-StrictMode -Version Latest
@@ -44,7 +44,12 @@ $requiredValues = @(
     'Escolha 1 ou 2',
     'Deseja abrir o Spotify agora?',
     '-KeepHomeContent',
-    '-DoNotStartSpotify'
+    '-DoNotStartSpotify',
+    'Remover o Proxyum SpotX completamente',
+    'Digite REMOVER TUDO para confirmar',
+    'Remove-SafeSpotifyDirectory',
+    'SpotifyAB.SpotifyMusic',
+    '[switch]$Uninstall'
 )
 
 foreach ($requiredValue in $requiredValues) {
@@ -56,6 +61,17 @@ foreach ($requiredValue in $requiredValues) {
 $cmdContent = Get-Content -LiteralPath $cmdPath -Raw
 if (-not $cmdContent.Contains('Install-ProxyumSpotX.ps1')) {
     throw 'Install.cmd nao chama o instalador PowerShell.'
+}
+
+$readmePath = Join-Path $repositoryRoot 'README.md'
+$readmeContent = Get-Content -LiteralPath $readmePath -Raw
+$codeFence = (([string][char]96) * 3) + 'powershell'
+$installerBlocks = [regex]::Matches($readmeContent, [regex]::Escape($codeFence)).Count
+if ($installerBlocks -ne 1) {
+    throw "README deve ter exatamente um bloco powershell; encontrado: $installerBlocks"
+}
+if (-not $readmeContent.Contains('releases/latest/download/i.ps1|iex')) {
+    throw 'Comando remoto curto ausente do README.'
 }
 
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green
