@@ -1,67 +1,32 @@
-# Proxyum SpotX Old Theme Installer
+# Proxyum SpotX Old Theme
 
-Instalador próprio do **Proxyum** para aplicar o perfil Old theme do SpotX ao Spotify Desktop no Windows.
+Instalador do Proxyum para usar o tema antigo do Spotify com SpotX.
 
-O projeto instala o Spotify `1.2.13.661.ga588f749`, aplica o tema antigo e bloqueia atualizações automáticas — a combinação indicada pelo SpotX para preservar a interface antiga.
+## Instalador
 
-## Instalação direta pelo GitHub
-
-Abra o Windows PowerShell e execute este comando de qualquer diretório:
+Abra o Windows PowerShell e cole:
 
 ```powershell
-$u='https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/v1.0.1/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; curl.exe -L --fail --retry 3 --connect-timeout 20 --max-time 180 $u -o $p; if ($LASTEXITCODE -ne 0) { throw 'Falha ao baixar o instalador Proxyum.' }; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p
+$u='https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/v1.1.0/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; curl.exe -L --fail --retry 3 $u -o $p; if ($LASTEXITCODE -ne 0) { throw 'Falha ao baixar o instalador.' }; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p
 ```
 
-Não é necessário clonar o repositório nem ter o arquivo no diretório atual. A URL usa a versão fixa `v1.0.1`, evitando alterações silenciosas vindas da branch `main`.
+O instalador pergunta o que fazer com podcasts, episódios e audiolivros. No final, também pergunta se você quer abrir o Spotify.
 
-## Instalação local opcional
+## Recomendações
 
-1. Baixe o projeto pelo botão **Code → Download ZIP**.
-2. Extraia o ZIP.
-3. Execute `Install.cmd` dentro da pasta extraída.
-
-## Opções
-
-Para instalar diretamente do GitHub com opções, acrescente os parâmetros depois de `$p`:
-
-```powershell
-$u='https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/v1.0.1/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; curl.exe -L --fail --retry 3 --connect-timeout 20 --max-time 180 $u -o $p; if ($LASTEXITCODE -ne 0) { throw 'Falha ao baixar o instalador Proxyum.' }; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p -HidePodcasts -StartSpotify
-```
-
-Parâmetros disponíveis:
-
-- `-HidePodcasts`: oculta podcasts, episódios e audiolivros da página inicial.
-- `-StartSpotify`: abre o Spotify ao terminar.
-- `-DryRun`: valida download, hash e argumentos sem modificar o Spotify.
-- `-AllowDefenderExclusions`: permite que o instalador upstream ofereça exclusões no Defender.
-
-Por padrão, podcasts são preservados e as exclusões do Microsoft Defender são desativadas.
-
-## Controles de integridade
-
-- O instalador SpotX está fixado no commit `2a179d3cf0d207cc7a8b4401eaea88b3c290a30e`.
-- O arquivo baixado precisa corresponder ao SHA-256 `BCF113D289C8AAF5990887D36AF5D6AE7E1D8FA183A68A819D5892CB99B84AB8`.
-- O script é executado como arquivo temporário, sem `Invoke-Expression` sobre a resposta da rede.
-- Arquivos temporários são removidos no final.
-- Exclusões no Microsoft Defender ficam desativadas por padrão.
-
-O SpotX ainda pode baixar componentes secundários dos serviços upstream durante a instalação. Fixar e validar o script principal reduz o risco, mas não elimina a necessidade de confiar no projeto externo.
+- Feche o Spotify antes de começar.
+- Leia as perguntas mostradas durante a instalação.
+- Se já tiver um Spotify mais novo, confirme o downgrade somente se quiser usar o tema antigo.
+- Não feche a janela enquanto a barra estiver em andamento.
 
 ## Avisos
 
-- Esta versão do Spotify é de 2023 e não recebe as correções de segurança das versões atuais.
-- Se já existir uma versão desktop mais nova, ela será automaticamente rebaixada e sobrescrita pela 1.2.13.661; as pastas Users e o arquivo prefs são preservados.
-- O patch altera arquivos assinados do Spotify; a assinatura do executável modificado deixa de ser válida.
-- Este projeto não é afiliado, patrocinado ou aprovado pelo Spotify.
-- Use por sua conta e risco e respeite os termos aplicáveis ao serviço.
+- Usa o Spotify `1.2.13.661`, de 2023, porque versões novas não possuem o tema antigo.
+- O SpotX altera arquivos do Spotify e bloqueia atualizações.
+- Exclusões no Microsoft Defender ficam desativadas por padrão.
+- Projeto sem vínculo com o Spotify. Use por sua conta e risco.
+- O instalador usa o [SpotX](https://github.com/SpotX-Official/SpotX) como dependência externa.
 
 ## Autoria
 
-Projeto e instalador mantidos por **Proxyum**.
-
-O SpotX é utilizado como dependência externa. Consulte [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para os avisos técnicos e de licença.
-
-## Licença
-
-O código original deste instalador é disponibilizado sob a licença MIT. Consulte [LICENSE](LICENSE).
-
+Feito e mantido por **Proxyum**.

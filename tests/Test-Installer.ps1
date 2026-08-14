@@ -35,7 +35,16 @@ $requiredValues = @(
     '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e',
     'BCF113D289C8AAF5990887D36AF5D6AE7E1D8FA183A68A819D5892CB99B84AB8',
     '-block_update_on',
-    '-defender_exclusions_off'
+    '-defender_exclusions_off',
+    'Ainda trabalhando',
+    '-ForceDowngrade',
+    '-RemoveStoreVersion',
+    'PercentComplete',
+    '100%',
+    'Escolha 1 ou 2',
+    'Deseja abrir o Spotify agora?',
+    '-KeepHomeContent',
+    '-DoNotStartSpotify'
 )
 
 foreach ($requiredValue in $requiredValues) {
