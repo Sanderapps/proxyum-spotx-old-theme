@@ -29,7 +29,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.2.1'
+$InstallerVersion = '1.2.2'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -558,4 +558,3 @@ catch {
 finally {
     Remove-VerifiedTempDirectory -Path $workDirectory
 }
-

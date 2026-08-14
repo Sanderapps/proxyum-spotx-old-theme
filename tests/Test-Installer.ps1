@@ -81,12 +81,22 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.2.1'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.2.2'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.2.1.'
+    throw 'i.ps1 nao aponta para a release v1.2.2.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'
+}
+
+$bootstrapBytes = [IO.File]::ReadAllBytes($bootstrapPath)
+$hasUtf8Bom =
+    $bootstrapBytes.Length -ge 3 -and
+    $bootstrapBytes[0] -eq 0xEF -and
+    $bootstrapBytes[1] -eq 0xBB -and
+    $bootstrapBytes[2] -eq 0xBF
+if ($hasUtf8Bom) {
+    throw 'i.ps1 deve ser UTF-8 sem BOM para funcionar com irm | iex no Windows PowerShell 5.1.'
 }
 
 $cmdContent = Get-Content -LiteralPath $cmdPath -Raw
@@ -106,4 +116,3 @@ if (-not $readmeContent.Contains('releases/latest/download/i.ps1|iex')) {
 }
 
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green
-
