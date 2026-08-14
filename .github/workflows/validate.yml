@@ -1,0 +1,20 @@
+name: Validate installer
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Parse and validate installer
+        shell: powershell
+        run: .\tests\Test-Installer.ps1
+
