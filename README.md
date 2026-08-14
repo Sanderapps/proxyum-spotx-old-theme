@@ -4,34 +4,36 @@ Instalador próprio do **Proxyum** para aplicar o perfil Old theme do SpotX ao S
 
 O projeto instala o Spotify `1.2.13.661.ga588f749`, aplica o tema antigo e bloqueia atualizações automáticas — a combinação indicada pelo SpotX para preservar a interface antiga.
 
-## Como usar
+## Instalação direta pelo GitHub
+
+Abra o Windows PowerShell e execute este comando de qualquer diretório:
+
+```powershell
+$u='https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/v1.0.0/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; Invoke-WebRequest -UseBasicParsing $u -OutFile $p; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p
+```
+
+Não é necessário clonar o repositório nem ter o arquivo no diretório atual. A URL usa a versão fixa `v1.0.0`, evitando alterações silenciosas vindas da branch `main`.
+
+## Instalação local opcional
 
 1. Baixe o projeto pelo botão **Code → Download ZIP**.
 2. Extraia o ZIP.
-3. Execute `Install.cmd`.
-4. Confirme o aviso do Windows somente se o arquivo veio deste repositório.
-
-Também é possível executar diretamente no PowerShell:
-
-```powershell
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\Install-ProxyumSpotX.ps1
-```
+3. Execute `Install.cmd` dentro da pasta extraída.
 
 ## Opções
 
+Para instalar diretamente do GitHub com opções, acrescente os parâmetros depois de `$p`:
+
 ```powershell
-# Ocultar podcasts, episódios e audiolivros da página inicial
-.\Install-ProxyumSpotX.ps1 -HidePodcasts
-
-# Abrir o Spotify ao terminar
-.\Install-ProxyumSpotX.ps1 -StartSpotify
-
-# Validar download, hash e argumentos sem modificar o Spotify
-.\Install-ProxyumSpotX.ps1 -DryRun
-
-# Permitir que o instalador upstream ofereça exclusões no Defender
-.\Install-ProxyumSpotX.ps1 -AllowDefenderExclusions
+$u='https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/v1.0.0/Install-ProxyumSpotX.ps1'; $p=Join-Path $env:TEMP 'Install-ProxyumSpotX.ps1'; Invoke-WebRequest -UseBasicParsing $u -OutFile $p; powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $p -HidePodcasts -StartSpotify
 ```
+
+Parâmetros disponíveis:
+
+- `-HidePodcasts`: oculta podcasts, episódios e audiolivros da página inicial.
+- `-StartSpotify`: abre o Spotify ao terminar.
+- `-DryRun`: valida download, hash e argumentos sem modificar o Spotify.
+- `-AllowDefenderExclusions`: permite que o instalador upstream ofereça exclusões no Defender.
 
 Por padrão, podcasts são preservados e as exclusões do Microsoft Defender são desativadas.
 
