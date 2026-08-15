@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -11,8 +13,8 @@ using System.Windows.Forms;
 [assembly: AssemblyCompany("Proxyum")]
 [assembly: AssemblyProduct("Proxyum SpotX Old Theme")]
 [assembly: AssemblyCopyright("Proxyum")]
-[assembly: AssemblyVersion("1.5.0.0")]
-[assembly: AssemblyFileVersion("1.5.0.0")]
+[assembly: AssemblyVersion("1.5.1.0")]
+[assembly: AssemblyFileVersion("1.5.1.0")]
 
 internal static class GuiProgram
 {
@@ -49,6 +51,7 @@ internal sealed class InstallerForm : Form
     private RichTextBox logBox;
     private Process runningProcess;
     private bool busy;
+    private bool openSpotifyAfterSuccess;
 
     internal InstallerForm()
     {
@@ -114,7 +117,7 @@ internal sealed class InstallerForm : Form
 
         Label subtitle = new Label();
         subtitle.AutoSize = true;
-        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.0";
+        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.1";
         subtitle.ForeColor = textMuted;
         subtitle.Location = new Point(222, 72);
         header.Controls.Add(subtitle);
@@ -202,20 +205,12 @@ internal sealed class InstallerForm : Form
         logBox.BorderStyle = BorderStyle.FixedSingle;
         logBox.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
         logBox.Location = new Point(24, 370);
-        logBox.Size = new Size(712, 196);
+        logBox.Size = new Size(712, 226);
         logBox.ReadOnly = true;
         logBox.DetectUrls = false;
         logBox.WordWrap = false;
         Controls.Add(logBox);
 
-        Label footer = new Label();
-        footer.AutoSize = false;
-        footer.Text = "O instalador usa internet e modifica arquivos do Spotify. Use por sua conta e risco.";
-        footer.ForeColor = textMuted;
-        footer.TextAlign = ContentAlignment.MiddleCenter;
-        footer.Location = new Point(24, 580);
-        footer.Size = new Size(712, 22);
-        Controls.Add(footer);
     }
 
     private Button CreateButton(
@@ -260,11 +255,10 @@ internal sealed class InstallerForm : Form
         string contentOption = hideContentRadio.Checked
             ? "-HidePodcasts"
             : "-KeepHomeContent";
-        string startOption = startSpotifyCheck.Checked
-            ? "-StartSpotify"
-            : "-DoNotStartSpotify";
+        openSpotifyAfterSuccess = startSpotifyCheck.Checked;
+        string startOption = "-DoNotStartSpotify";
         string arguments =
-            "-Install -ForceDowngrade -RemoveStoreVersion " +
+            "-Install -GuiMode -ForceDowngrade -RemoveStoreVersion " +
             contentOption + " " + startOption;
 
         StartInstallerProcess(arguments, "INSTALACAO EM ANDAMENTO");
@@ -285,8 +279,9 @@ internal sealed class InstallerForm : Form
             return;
         }
 
+        openSpotifyAfterSuccess = false;
         StartInstallerProcess(
-            "-Uninstall -ConfirmCompleteRemoval",
+            "-Uninstall -GuiMode -ConfirmCompleteRemoval",
             "REMOCAO EM ANDAMENTO"
         );
     }
@@ -334,6 +329,11 @@ internal sealed class InstallerForm : Form
         process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         process.StartInfo.RedirectStandardOutput = true;
         process.StartInfo.RedirectStandardError = true;
+        Encoding oemEncoding = Encoding.GetEncoding(
+            CultureInfo.CurrentCulture.TextInfo.OEMCodePage
+        );
+        process.StartInfo.StandardOutputEncoding = oemEncoding;
+        process.StartInfo.StandardErrorEncoding = oemEncoding;
         process.EnableRaisingEvents = true;
         process.OutputDataReceived += OnProcessOutput;
         process.ErrorDataReceived += OnProcessOutput;
@@ -395,6 +395,10 @@ internal sealed class InstallerForm : Form
                 progressBar.Value = 100;
                 SetStatus("OPERACAO CONCLUIDA", spotifyGreen);
                 AppendLog("[100%] Operacao concluida pelo Proxyum.");
+                if (openSpotifyAfterSuccess)
+                {
+                    StartSpotifyFromGui();
+                }
             }
             else
             {
@@ -402,6 +406,48 @@ internal sealed class InstallerForm : Form
                 AppendLog("ERRO: processo finalizado com codigo " + exitCode + ".");
             }
         });
+    }
+
+    private void StartSpotifyFromGui()
+    {
+        string roaming = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData
+        );
+        string local = Environment.GetFolderPath(
+            Environment.SpecialFolder.LocalApplicationData
+        );
+        string[] candidates = new string[]
+        {
+            Path.Combine(roaming, "Spotify", "Spotify.exe"),
+            Path.Combine(local, "Spotify", "Spotify.exe")
+        };
+
+        foreach (string candidate in candidates)
+        {
+            if (!File.Exists(candidate))
+            {
+                continue;
+            }
+
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = candidate;
+                startInfo.WorkingDirectory = Path.GetDirectoryName(candidate);
+                startInfo.UseShellExecute = true;
+                startInfo.WindowStyle = ProcessWindowStyle.Normal;
+                Process.Start(startInfo);
+                AppendLog("[SPOTIFY] Aplicativo aberto automaticamente.");
+                return;
+            }
+            catch (Exception exception)
+            {
+                AppendLog("ERRO ao abrir o Spotify: " + exception.Message);
+                return;
+            }
+        }
+
+        AppendLog("AVISO: Spotify.exe nao foi encontrado para abertura automatica.");
     }
 
     private void SetBusy(bool value)

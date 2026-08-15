@@ -24,13 +24,14 @@ param(
     [switch]$ForceDowngrade,
     [switch]$RemoveStoreVersion,
     [switch]$ConfirmCompleteRemoval,
+    [switch]$GuiMode,
     [switch]$DryRun
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.5.0'
+$InstallerVersion = '1.5.1'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -465,8 +466,35 @@ function Complete-SpotifyLaunchChoice {
         return
     }
 
-    Start-Process -FilePath $spotifyExecutable
-    Write-Host 'Spotify aberto.' -ForegroundColor Green
+    $spotifyStarted = $false
+    for ($attempt = 1; $attempt -le 2 -and -not $spotifyStarted; $attempt++) {
+        try {
+            Start-Process -FilePath $spotifyExecutable -WorkingDirectory (Split-Path -Parent $spotifyExecutable)
+            Start-Sleep -Seconds 2
+            $spotifyStarted = [bool](Get-Process -Name Spotify -ErrorAction SilentlyContinue)
+        }
+        catch {
+            $spotifyStarted = $false
+        }
+    }
+
+    if (-not $spotifyStarted) {
+        Write-Warning 'O Spotify foi instalado, mas nao iniciou automaticamente. Abra pelo atalho do Windows.'
+        return
+    }
+
+    try {
+        $spotifyProcess = Get-Process -Name Spotify -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($spotifyProcess) {
+            $windowShell = New-Object -ComObject WScript.Shell
+            $null = $windowShell.AppActivate($spotifyProcess.Id)
+        }
+    }
+    catch {
+        # O processo ja foi iniciado; ativar a janela e apenas uma melhoria visual.
+    }
+
+    Write-Host 'Spotify aberto e processo confirmado.' -ForegroundColor Green
 }
 
 function Remove-VerifiedTempDirectory {
@@ -594,8 +622,10 @@ try {
     Write-Stage -Number 4 -Message 'Instalando o Spotify e aplicando o Old theme'
     Write-Host 'Esta etapa pode levar alguns minutos. A janela nao esta travada.' -ForegroundColor Yellow
 
-    if ($AllowDefenderExclusions) {
-        Write-Host 'Modo interativo do Defender habilitado; responda aos prompts do SpotX.' -ForegroundColor Yellow
+    if ($AllowDefenderExclusions -or $GuiMode) {
+        if ($AllowDefenderExclusions) {
+            Write-Host 'Modo interativo do Defender habilitado; responda aos prompts do SpotX.' -ForegroundColor Yellow
+        }
         & $windowsPowerShell -NoLogo -NoProfile -ExecutionPolicy Bypass -File $downloadedScript @spotXArguments
         $spotXExitCode = $LASTEXITCODE
     }
