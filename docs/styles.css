@@ -1,0 +1,210 @@
+:root {
+  color-scheme: dark;
+  --background: #080a09;
+  --surface: #111512;
+  --surface-soft: #171c18;
+  --text: #f4f7f5;
+  --muted: #9da7a0;
+  --green: #1ed760;
+  --green-bright: #42f47f;
+  --purple: #9c5cff;
+  --border: rgba(255, 255, 255, 0.09);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(30, 215, 96, 0.16), transparent 30rem),
+    radial-gradient(circle at 90% 85%, rgba(156, 92, 255, 0.14), transparent 28rem),
+    var(--background);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.page-shell {
+  width: min(100% - 32px, 1040px);
+  margin: 0 auto;
+  padding: 40px 0 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.brand-logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 25px rgba(30, 215, 96, 0.22));
+}
+
+.brand p {
+  margin: 0;
+}
+
+.brand-name {
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.brand-name span {
+  color: white;
+}
+
+.brand-name {
+  color: var(--green);
+}
+
+.brand-subtitle {
+  margin-top: 3px !important;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.tutorial-card {
+  padding: clamp(22px, 5vw, 48px);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: linear-gradient(145deg, rgba(23, 28, 24, 0.96), rgba(13, 16, 14, 0.96));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--green-bright);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+}
+
+.intro {
+  margin: 14px 0 28px;
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+}
+
+.video-frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(30, 215, 96, 0.3);
+  border-radius: 18px;
+  background: #000;
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.38);
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text);
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
+}
+
+.button-primary {
+  color: #071109;
+  background: var(--green);
+}
+
+.button-primary:hover {
+  background: var(--green-bright);
+}
+
+.button-secondary {
+  border-color: var(--border);
+  background: var(--surface-soft);
+}
+
+.button-secondary:hover {
+  border-color: rgba(156, 92, 255, 0.55);
+}
+
+footer {
+  padding-top: 22px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.86rem;
+}
+
+footer strong {
+  color: var(--green);
+}
+
+@media (max-width: 560px) {
+  .page-shell {
+    width: min(100% - 20px, 1040px);
+    padding-top: 24px;
+  }
+
+  .brand {
+    justify-content: flex-start;
+  }
+
+  .brand-logo {
+    width: 58px;
+    height: 58px;
+  }
+
+  .tutorial-card {
+    border-radius: 20px;
+  }
+
+  .video-frame {
+    border-radius: 12px;
+  }
+
+  .actions,
+  .button {
+    width: 100%;
+  }
+}

@@ -17,7 +17,7 @@ No menu voce pode instalar, reparar ou remover tudo.
 
   **Tutorial para Windows:**
 
-  [![Tutorial para Windows](https://img.youtube.com/vi/3fGM7dQDf8k/hqdefault.jpg)](https://www.youtube.com/watch?v=3fGM7dQDf8k)
+  [![Tutorial para Windows](https://img.youtube.com/vi/3fGM7dQDf8k/hqdefault.jpg)](https://sanderapps.github.io/proxyum-spotx-old-theme/)
 
 - Feche o Spotify antes de comecar.
 - Leia as perguntas e espere a barra chegar a 100%.
