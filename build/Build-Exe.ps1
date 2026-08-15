@@ -12,6 +12,7 @@ if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
 }
 $sourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXLauncher.cs'
 $installerPath = Join-Path $repositoryRoot 'Install-ProxyumSpotX.ps1'
+$iconPath = Join-Path $repositoryRoot 'assets\ProxyumSpotX.ico'
 $outputPath = Join-Path $OutputDirectory 'ProxyumSpotX-Installer.exe'
 $resourceName = 'ProxyumSpotX.InstallProxyumSpotX.ps1'
 
@@ -32,6 +33,9 @@ if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
     throw 'Instalador PowerShell nao encontrado.'
 }
+if (-not (Test-Path -LiteralPath $iconPath -PathType Leaf)) {
+    throw 'Icone do executavel nao encontrado.'
+}
 
 $null = New-Item -ItemType Directory -Path $OutputDirectory -Force
 
@@ -40,6 +44,7 @@ $compilerArguments = @(
     '/target:exe',
     '/platform:anycpu',
     '/optimize+',
+    ('/win32icon:' + $iconPath),
     ('/out:' + $outputPath),
     ('/resource:' + $installerPath + ',' + $resourceName),
     $sourcePath

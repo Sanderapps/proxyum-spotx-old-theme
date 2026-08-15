@@ -12,8 +12,11 @@ if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
 }
 $sourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXGui.cs'
 $installerPath = Join-Path $repositoryRoot 'Install-ProxyumSpotX.ps1'
+$iconPath = Join-Path $repositoryRoot 'assets\ProxyumSpotX.ico'
+$logoPath = Join-Path $repositoryRoot 'assets\LOGO INSTALLER.png'
 $outputPath = Join-Path $OutputDirectory 'ProxyumSpotX-Setup.exe'
 $resourceName = 'ProxyumSpotX.InstallProxyumSpotX.ps1'
+$logoResourceName = 'ProxyumSpotX.Logo.png'
 
 $compilerCandidates = @(
     (Join-Path $env:SystemRoot 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'),
@@ -26,6 +29,12 @@ $compiler = $compilerCandidates |
 if (-not $compiler) {
     throw 'Compilador C# do .NET Framework nao encontrado.'
 }
+if (-not (Test-Path -LiteralPath $iconPath -PathType Leaf)) {
+    throw 'Icone da interface grafica nao encontrado.'
+}
+if (-not (Test-Path -LiteralPath $logoPath -PathType Leaf)) {
+    throw 'Logo da interface grafica nao encontrado.'
+}
 
 $null = New-Item -ItemType Directory -Path $OutputDirectory -Force
 $compilerArguments = @(
@@ -35,8 +44,10 @@ $compilerArguments = @(
     '/optimize+',
     '/reference:System.Windows.Forms.dll',
     '/reference:System.Drawing.dll',
+    ('/win32icon:' + $iconPath),
     ('/out:' + $outputPath),
     ('/resource:' + $installerPath + ',' + $resourceName),
+    ('/resource:' + $logoPath + ',' + $logoResourceName),
     $sourcePath
 )
 
@@ -48,6 +59,9 @@ if ($LASTEXITCODE -ne 0) {
 $assembly = [Reflection.Assembly]::LoadFile([IO.Path]::GetFullPath($outputPath))
 if ($resourceName -notin $assembly.GetManifestResourceNames()) {
     throw 'A interface compilada nao possui o instalador embutido.'
+}
+if ($logoResourceName -notin $assembly.GetManifestResourceNames()) {
+    throw 'A interface compilada nao possui o logo embutido.'
 }
 
 $resourceStream = $assembly.GetManifestResourceStream($resourceName)

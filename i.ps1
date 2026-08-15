@@ -1,8 +1,8 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$ReleaseVersion = 'v1.5.2'
-$ExpectedSha256 = '94D47E0426B44CC0A035AE30CE16041A5EA30F9698092391FF44B39E9B5EB450'
+$ReleaseVersion = 'v1.5.3'
+$ExpectedSha256 = 'F4F6613481C60A43B1C2C9AFFD81F3D0DE7C4FFE29716CC18EE25F4E6E2D2B57'
 $InstallerUrl = "https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/download/$ReleaseVersion/Install-ProxyumSpotX.ps1"
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\')
 $tempInstaller = Join-Path $tempRoot ("ProxyumSpotX-Bootstrap-" + [Guid]::NewGuid().ToString('N') + '.ps1')

@@ -12,6 +12,9 @@ $launcherSourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXLauncher.cs'
 $buildScriptPath = Join-Path $repositoryRoot 'build\Build-Exe.ps1'
 $guiSourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXGui.cs'
 $guiBuildScriptPath = Join-Path $repositoryRoot 'build\Build-Gui.ps1'
+$iconBuildScriptPath = Join-Path $repositoryRoot 'build\Build-Icon.ps1'
+$iconPath = Join-Path $repositoryRoot 'assets\ProxyumSpotX.ico'
+$logoPath = Join-Path $repositoryRoot 'assets\LOGO INSTALLER.png'
 $virusTotalScriptPath = Join-Path $repositoryRoot 'scripts\Scan-VirusTotal.ps1'
 $virusTotalWorkflowPath = Join-Path $repositoryRoot '.github\workflows\virustotal.yml'
 $cmdPath = Join-Path $repositoryRoot 'Install.cmd'
@@ -42,6 +45,12 @@ if (-not (Test-Path -LiteralPath $guiSourcePath -PathType Leaf)) {
 
 if (-not (Test-Path -LiteralPath $guiBuildScriptPath -PathType Leaf)) {
     throw 'Script de compilacao da interface grafica nao encontrado.'
+}
+
+foreach ($visualAsset in @($iconBuildScriptPath, $iconPath, $logoPath)) {
+    if (-not (Test-Path -LiteralPath $visualAsset -PathType Leaf)) {
+        throw "Recurso visual obrigatorio nao encontrado: $visualAsset"
+    }
 }
 
 if (-not (Test-Path -LiteralPath $virusTotalScriptPath -PathType Leaf)) {
@@ -125,9 +134,9 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.5.2'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.5.3'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.5.2.'
+    throw 'i.ps1 nao aponta para a release v1.5.3.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'
@@ -186,10 +195,35 @@ if ($buildParseErrors.Count -gt 0) {
 $buildContent = Get-Content -LiteralPath $buildScriptPath -Raw
 if (
     -not $buildContent.Contains('/target:exe') -or
+    -not $buildContent.Contains('/win32icon:') -or
     -not $buildContent.Contains('/resource:') -or
     -not $buildContent.Contains('GetManifestResourceNames')
 ) {
     throw 'Build-Exe.ps1 nao compila o executavel com o instalador embutido.'
+}
+
+$iconBuildTokens = $null
+$iconBuildParseErrors = $null
+$null = [Management.Automation.Language.Parser]::ParseFile(
+    $iconBuildScriptPath,
+    [ref]$iconBuildTokens,
+    [ref]$iconBuildParseErrors
+)
+if ($iconBuildParseErrors.Count -gt 0) {
+    $messages = $iconBuildParseErrors | ForEach-Object { $_.Message }
+    throw ("Erros de sintaxe no Build-Icon.ps1: " + ($messages -join '; '))
+}
+$iconHeader = [IO.File]::ReadAllBytes($iconPath) | Select-Object -First 6
+if (
+    $iconHeader.Count -ne 6 -or
+    $iconHeader[0] -ne 0 -or
+    $iconHeader[1] -ne 0 -or
+    $iconHeader[2] -ne 1 -or
+    $iconHeader[3] -ne 0 -or
+    $iconHeader[4] -ne 9 -or
+    $iconHeader[5] -ne 0
+) {
+    throw 'ProxyumSpotX.ico nao possui nove imagens de icone validas.'
 }
 
 $guiSource = Get-Content -LiteralPath $guiSourcePath -Raw
@@ -202,6 +236,8 @@ foreach ($requiredGuiValue in @(
     '-GuiMode',
     'StandardOutputEncoding',
     'StartSpotifyFromGui',
+    'ProxyumSpotX.Logo.png',
+    'LoadLogoImage',
     'CreateNoWindow = true'
 )) {
     if (-not $guiSource.Contains($requiredGuiValue)) {
@@ -264,6 +300,8 @@ $guiBuildContent = Get-Content -LiteralPath $guiBuildScriptPath -Raw
 if (
     -not $guiBuildContent.Contains('/target:winexe') -or
     -not $guiBuildContent.Contains('System.Windows.Forms.dll') -or
+    -not $guiBuildContent.Contains('/win32icon:') -or
+    -not $guiBuildContent.Contains('ProxyumSpotX.Logo.png') -or
     -not $guiBuildContent.Contains('/resource:')
 ) {
     throw 'Build-Gui.ps1 nao compila a interface grafica corretamente.'

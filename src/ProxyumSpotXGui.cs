@@ -13,8 +13,8 @@ using System.Windows.Forms;
 [assembly: AssemblyCompany("Proxyum")]
 [assembly: AssemblyProduct("Proxyum SpotX Old Theme")]
 [assembly: AssemblyCopyright("Proxyum")]
-[assembly: AssemblyVersion("1.5.2.0")]
-[assembly: AssemblyFileVersion("1.5.2.0")]
+[assembly: AssemblyVersion("1.5.3.0")]
+[assembly: AssemblyFileVersion("1.5.3.0")]
 
 internal static class GuiProgram
 {
@@ -30,6 +30,7 @@ internal static class GuiProgram
 internal sealed class InstallerForm : Form
 {
     private const string ResourceName = "ProxyumSpotX.InstallProxyumSpotX.ps1";
+    private const string LogoResourceName = "ProxyumSpotX.Logo.png";
     private const string TempPrefix = "ProxyumSpotX-Gui-";
 
     private readonly Color background = Color.FromArgb(18, 18, 18);
@@ -52,6 +53,7 @@ internal sealed class InstallerForm : Form
     private Process runningProcess;
     private bool busy;
     private bool openSpotifyAfterSuccess;
+    private Image logoImage;
 
     internal InstallerForm()
     {
@@ -63,6 +65,13 @@ internal sealed class InstallerForm : Form
 
         BuildInterface();
         FormClosing += OnFormClosing;
+        FormClosed += delegate
+        {
+            if (logoImage != null)
+            {
+                logoImage.Dispose();
+            }
+        };
 
         try
         {
@@ -91,6 +100,14 @@ internal sealed class InstallerForm : Form
         MaximizeBox = false;
         Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
         AutoScaleMode = AutoScaleMode.Dpi;
+        try
+        {
+            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+        }
+        catch
+        {
+            // O icone do executavel continua disponivel no Explorer.
+        }
 
         Panel header = new Panel();
         header.BackColor = Color.FromArgb(12, 12, 12);
@@ -98,6 +115,22 @@ internal sealed class InstallerForm : Form
         header.Size = new Size(760, 102);
         header.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         Controls.Add(header);
+
+        try
+        {
+            logoImage = LoadLogoImage();
+            PictureBox logo = new PictureBox();
+            logo.BackColor = Color.Transparent;
+            logo.Image = logoImage;
+            logo.Location = new Point(92, 12);
+            logo.Size = new Size(76, 76);
+            logo.SizeMode = PictureBoxSizeMode.Zoom;
+            header.Controls.Add(logo);
+        }
+        catch
+        {
+            // A interface permanece funcional mesmo se o recurso visual falhar.
+        }
 
         Label proxyumLabel = new Label();
         proxyumLabel.AutoSize = true;
@@ -117,7 +150,7 @@ internal sealed class InstallerForm : Form
 
         Label subtitle = new Label();
         subtitle.AutoSize = true;
-        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.2";
+        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.3";
         subtitle.ForeColor = textMuted;
         subtitle.Location = new Point(222, 72);
         header.Controls.Add(subtitle);
@@ -211,6 +244,23 @@ internal sealed class InstallerForm : Form
         logBox.WordWrap = false;
         Controls.Add(logBox);
 
+    }
+
+    private static Image LoadLogoImage()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        using (Stream stream = assembly.GetManifestResourceStream(LogoResourceName))
+        {
+            if (stream == null)
+            {
+                throw new InvalidOperationException("Logo interno nao encontrado.");
+            }
+
+            using (Image source = Image.FromStream(stream))
+            {
+                return new Bitmap(source);
+            }
+        }
     }
 
     private Button CreateButton(
