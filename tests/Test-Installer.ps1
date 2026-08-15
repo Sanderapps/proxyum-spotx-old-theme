@@ -239,7 +239,8 @@ foreach ($requiredVirusTotalValue in @(
     'virustotal-report:start',
     'virustotal-report:end',
     'VIRUSTOTAL_API_KEY',
-    'last_analysis_stats'
+    'last_analysis_stats',
+    '$total = $malicious + $suspicious + $harmless + $undetected'
 )) {
     if (-not $virusTotalContent.Contains($requiredVirusTotalValue)) {
         throw "Valor obrigatorio ausente da automacao VirusTotal: $requiredVirusTotalValue"

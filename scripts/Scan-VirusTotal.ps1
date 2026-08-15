@@ -103,10 +103,7 @@ $suspicious = [int]$stats.suspicious
 $harmless = [int]$stats.harmless
 $undetected = [int]$stats.undetected
 $flagged = $malicious + $suspicious
-$total = 0
-foreach ($property in $stats.PSObject.Properties) {
-    $total += [int]$property.Value
-}
+$total = $malicious + $suspicious + $harmless + $undetected
 
 $reportUrl = "https://www.virustotal.com/gui/file/$sha256"
 $utcTimestamp = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss ''UTC''')
