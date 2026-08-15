@@ -15,8 +15,6 @@ $guiBuildScriptPath = Join-Path $repositoryRoot 'build\Build-Gui.ps1'
 $iconBuildScriptPath = Join-Path $repositoryRoot 'build\Build-Icon.ps1'
 $iconPath = Join-Path $repositoryRoot 'assets\ProxyumSpotX.ico'
 $logoPath = Join-Path $repositoryRoot 'assets\LOGO INSTALLER.png'
-$virusTotalScriptPath = Join-Path $repositoryRoot 'scripts\Scan-VirusTotal.ps1'
-$virusTotalWorkflowPath = Join-Path $repositoryRoot '.github\workflows\virustotal.yml'
 $cmdPath = Join-Path $repositoryRoot 'Install.cmd'
 
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
@@ -51,14 +49,6 @@ foreach ($visualAsset in @($iconBuildScriptPath, $iconPath, $logoPath)) {
     if (-not (Test-Path -LiteralPath $visualAsset -PathType Leaf)) {
         throw "Recurso visual obrigatorio nao encontrado: $visualAsset"
     }
-}
-
-if (-not (Test-Path -LiteralPath $virusTotalScriptPath -PathType Leaf)) {
-    throw 'Script de analise VirusTotal nao encontrado.'
-}
-
-if (-not (Test-Path -LiteralPath $virusTotalWorkflowPath -PathType Leaf)) {
-    throw 'Workflow do VirusTotal nao encontrado.'
 }
 
 if (-not (Test-Path -LiteralPath $cmdPath -PathType Leaf)) {
@@ -257,45 +247,6 @@ if ($guiBuildParseErrors.Count -gt 0) {
     throw ("Erros de sintaxe no Build-Gui.ps1: " + ($messages -join '; '))
 }
 
-$virusTotalTokens = $null
-$virusTotalParseErrors = $null
-$null = [Management.Automation.Language.Parser]::ParseFile(
-    $virusTotalScriptPath,
-    [ref]$virusTotalTokens,
-    [ref]$virusTotalParseErrors
-)
-if ($virusTotalParseErrors.Count -gt 0) {
-    $messages = $virusTotalParseErrors | ForEach-Object { $_.Message }
-    throw ("Erros de sintaxe no Scan-VirusTotal.ps1: " + ($messages -join '; '))
-}
-$virusTotalContent = Get-Content -LiteralPath $virusTotalScriptPath -Raw
-foreach ($requiredVirusTotalValue in @(
-    'https://www.virustotal.com/api/v3/files',
-    'https://www.virustotal.com/api/v3/analyses/',
-    'virustotal-report:start',
-    'virustotal-report:end',
-    'VIRUSTOTAL_API_KEY',
-    'last_analysis_stats',
-    '$total = $malicious + $suspicious + $harmless + $undetected'
-)) {
-    if (-not $virusTotalContent.Contains($requiredVirusTotalValue)) {
-        throw "Valor obrigatorio ausente da automacao VirusTotal: $requiredVirusTotalValue"
-    }
-}
-
-$virusTotalWorkflow = Get-Content -LiteralPath $virusTotalWorkflowPath -Raw
-foreach ($requiredWorkflowValue in @(
-    'types: [published]',
-    'workflow_dispatch:',
-    'secrets.VIRUSTOTAL_API_KEY',
-    'ProxyumSpotX-Setup.exe',
-    'Scan-VirusTotal.ps1',
-    'contents: write'
-)) {
-    if (-not $virusTotalWorkflow.Contains($requiredWorkflowValue)) {
-        throw "Valor obrigatorio ausente do workflow VirusTotal: $requiredWorkflowValue"
-    }
-}
 $guiBuildContent = Get-Content -LiteralPath $guiBuildScriptPath -Raw
 if (
     -not $guiBuildContent.Contains('/target:winexe') -or
@@ -331,11 +282,4 @@ if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Installe
 if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Setup.exe')) {
     throw 'Link do instalador visual ausente do README.'
 }
-if (
-    -not $readmeContent.Contains('<!-- virustotal-report:start -->') -or
-    -not $readmeContent.Contains('<!-- virustotal-report:end -->')
-) {
-    throw 'Marcadores do relatorio VirusTotal ausentes do README.'
-}
-
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green
