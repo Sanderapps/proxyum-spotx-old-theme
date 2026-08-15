@@ -432,7 +432,7 @@ button {
   color: var(--purple-light);
 }
 
-.section-kicker.danger-text {
+.android-copy > p.section-kicker.danger-text {
   color: #ff4d4d;
 }
 
