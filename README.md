@@ -14,6 +14,11 @@ No menu voce pode instalar, reparar ou remover tudo.
 
 ## Recomendacoes
 - Desative o Windows defender
+
+  **Tutorial para Windows:**
+
+  [![Tutorial para Windows](https://img.youtube.com/vi/3fGM7dQDf8k/hqdefault.jpg)](https://www.youtube.com/watch?v=3fGM7dQDf8k)
+
 - Feche o Spotify antes de comecar.
 - Leia as perguntas e espere a barra chegar a 100%.
 
