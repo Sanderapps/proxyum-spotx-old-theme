@@ -67,11 +67,13 @@ $requiredValues = @(
     'Deseja abrir o Spotify agora?',
     '-KeepHomeContent',
     '-DoNotStartSpotify',
-    'Remover o Proxyum SpotX completamente',
+    'REMOVER COMPLETAMENTE',
     'Digite REMOVER TUDO para confirmar',
     'Remove-SafeSpotifyDirectory',
     'SpotifyAB.SpotifyMusic',
-    '[switch]$Uninstall'
+    '[switch]$Uninstall',
+    '$proxyumBanner',
+    '$spotXBanner'
 )
 
 foreach ($requiredValue in $requiredValues) {
@@ -86,9 +88,9 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.3.0'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.3.1'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.3.0.'
+    throw 'i.ps1 nao aponta para a release v1.3.1.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'

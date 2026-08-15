@@ -29,19 +29,64 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.3.0'
+$InstallerVersion = '1.3.1'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
 $ExpectedSpotXSha256 = 'BCF113D289C8AAF5990887D36AF5D6AE7E1D8FA183A68A819D5892CB99B84AB8'
 
+function Write-CenteredHostLine {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$Text,
+        [Parameter(Mandatory = $true)]
+        [ConsoleColor]$Color
+    )
+
+    $windowWidth = 80
+    try {
+        if ([Console]::WindowWidth -gt 0) {
+            $windowWidth = [Console]::WindowWidth
+        }
+    }
+    catch {
+        $windowWidth = 80
+    }
+
+    $blockWidth = ($Text | ForEach-Object { $_.Length } | Measure-Object -Maximum).Maximum
+    $leftPadding = [Math]::Max(0, [int](($windowWidth - $blockWidth) / 2))
+    foreach ($line in $Text) {
+        Write-Host ((' ' * $leftPadding) + $line) -ForegroundColor $Color
+    }
+}
+
 function Write-ProxyumHeader {
+    $proxyumBanner = @(
+        '__________',
+        '\______   \_______  _______  ______.__.__ __  _____',
+        ' |     ___/\_  __ \/  _ \  \/  <   |  |  |  \/     \',
+        ' |    |     |  | \(  <_> >    < \___  |  |  /  Y Y  \',
+        ' |____|     |__|   \____/__/\_ \/ ____|____/|__|_|  /',
+        '                              \/\/                \/'
+    )
+    $spotXBanner = @(
+        '  _________              __ ____  ___',
+        ' /   _____/_____   _____/  |\   \/  /',
+        ' \_____  \\____ \ /  _ \   __\     /',
+        ' /        \  |_> >  <_> )  | /     \',
+        '/_______  /   __/ \____/|__|/___/\  \',
+        '        \/|__|                    \_/'
+    )
+
     Write-Host ''
-    Write-Host '============================================================' -ForegroundColor DarkCyan
-    Write-Host "  Proxyum SpotX Old Theme Installer v$InstallerVersion" -ForegroundColor Cyan
-    Write-Host "  Spotify alvo: $SpotifyVersion" -ForegroundColor White
-    Write-Host '  Autor: Proxyum' -ForegroundColor White
-    Write-Host '============================================================' -ForegroundColor DarkCyan
+    Write-CenteredHostLine -Text $proxyumBanner -Color White
+    Write-Host ''
+    Write-CenteredHostLine -Text $spotXBanner -Color Green
+    Write-Host ''
+    Write-CenteredHostLine `
+        -Text ("INSTALADOR v{0} | SPOTIFY ALVO: {1}" -f $InstallerVersion, $SpotifyVersion) `
+        -Color DarkGray
+    Write-CenteredHostLine -Text 'AUTOR: PROXYUM' -Color DarkGray
     Write-Host ''
 }
 
@@ -69,18 +114,27 @@ function Select-MainAction {
     if ($Install -or $DryRun) { return 'Install' }
     if ($Uninstall) { return 'Uninstall' }
 
-    Write-Host 'O que voce quer fazer?' -ForegroundColor White
-    Write-Host '  [1] Instalar ou reparar o Proxyum SpotX'
-    Write-Host '  [2] Remover o Proxyum SpotX completamente'
-    Write-Host '  [3] Sair'
+    Write-Host '  +------------------------------------------------------+' -ForegroundColor DarkGray
+    Write-Host '  > SISTEMA PRONTO' -ForegroundColor Green
+    Write-Host '  > ESCOLHA UMA OPERACAO' -ForegroundColor White
+    Write-Host '  +------------------------------------------------------+' -ForegroundColor DarkGray
+    Write-Host ''
+    Write-Host '  [01]' -ForegroundColor Green -NoNewline
+    Write-Host ' INSTALAR OU REPARAR' -ForegroundColor White
+    Write-Host '  [02]' -ForegroundColor Yellow -NoNewline
+    Write-Host ' REMOVER COMPLETAMENTE' -ForegroundColor White
+    Write-Host '  [03]' -ForegroundColor DarkGray -NoNewline
+    Write-Host ' SAIR' -ForegroundColor White
+    Write-Host ''
 
     do {
-        $choice = Read-Host 'Escolha 1, 2 ou 3'
+        Write-Host '  [PROXYUM@SPOTX]' -ForegroundColor Green -NoNewline
+        $choice = Read-Host ' > Digite 01, 02 ou 03'
     }
-    while ($choice -notin @('1', '2', '3'))
+    while ($choice -notin @('1', '01', '2', '02', '3', '03'))
 
-    if ($choice -eq '1') { return 'Install' }
-    if ($choice -eq '2') { return 'Uninstall' }
+    if ($choice -in @('1', '01')) { return 'Install' }
+    if ($choice -in @('2', '02')) { return 'Uninstall' }
     return 'Exit'
 }
 
@@ -315,12 +369,15 @@ function Select-HomeContentPreference {
     if ($HidePodcasts) { return 'Hide' }
     if ($KeepHomeContent -or $DryRun) { return 'Keep' }
 
-    Write-Host 'Conteudo da pagina inicial:' -ForegroundColor White
-    Write-Host '  [1] Manter podcasts, episodios e audiolivros'
-    Write-Host '  [2] Remover podcasts, episodios e audiolivros'
+    Write-Host '  [CONTEUDO DA PAGINA INICIAL]' -ForegroundColor Green
+    Write-Host '  [1]' -ForegroundColor Green -NoNewline
+    Write-Host ' Manter podcasts, episodios e audiolivros' -ForegroundColor White
+    Write-Host '  [2]' -ForegroundColor Yellow -NoNewline
+    Write-Host ' Remover podcasts, episodios e audiolivros' -ForegroundColor White
 
     do {
-        $choice = Read-Host 'Escolha 1 ou 2'
+        Write-Host '  [PROXYUM@SPOTX]' -ForegroundColor Green -NoNewline
+        $choice = Read-Host ' > Escolha 1 ou 2'
     }
     while ($choice -notin @('1', '2'))
 
@@ -341,7 +398,10 @@ function Complete-SpotifyLaunchChoice {
     $shouldStart = [bool]$StartSpotify
     if (-not $StartSpotify -and -not $DoNotStartSpotify) {
         Write-Host ''
-        $choice = Read-Host 'Deseja abrir o Spotify agora? [S/N]'
+        Write-Host '  [INSTALACAO FINALIZADA]' -ForegroundColor Green
+        Write-Host '  Deseja abrir o Spotify agora?' -ForegroundColor White
+        Write-Host '  [PROXYUM@SPOTX]' -ForegroundColor Green -NoNewline
+        $choice = Read-Host ' > Responda S ou N'
         $shouldStart = $choice -match '^(s|sim|y|yes)$'
     }
 
