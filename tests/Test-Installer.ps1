@@ -86,6 +86,9 @@ $requiredValues = @(
     'Escolha 1 ou 2',
     'Deseja abrir o Spotify agora?',
     'Spotify aberto e processo confirmado.',
+    'Assert-SpotifyUiIntegrity',
+    'Apps\xpui.spa nao foi criada',
+    'Resultado confirmado pelos arquivos instalados.',
     '-KeepHomeContent',
     '-DoNotStartSpotify',
     'REMOVER COMPLETAMENTE',
@@ -112,9 +115,9 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.5.1'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.5.2'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.5.1.'
+    throw 'i.ps1 nao aponta para a release v1.5.2.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'

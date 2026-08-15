@@ -1,12 +1,15 @@
 [CmdletBinding()]
 param(
-    [string]$OutputDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) 'artifacts')
+    [string]$OutputDirectory
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
+if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
+    $OutputDirectory = Join-Path $repositoryRoot 'artifacts'
+}
 $sourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXGui.cs'
 $installerPath = Join-Path $repositoryRoot 'Install-ProxyumSpotX.ps1'
 $outputPath = Join-Path $OutputDirectory 'ProxyumSpotX-Setup.exe'

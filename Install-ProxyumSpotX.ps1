@@ -31,7 +31,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.5.1'
+$InstallerVersion = '1.5.2'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -497,6 +497,60 @@ function Complete-SpotifyLaunchChoice {
     Write-Host 'Spotify aberto e processo confirmado.' -ForegroundColor Green
 }
 
+function Assert-SpotifyUiIntegrity {
+    $spotifyDirectory = Join-Path $env:APPDATA 'Spotify'
+    $spotifyExecutable = Join-Path $spotifyDirectory 'Spotify.exe'
+    $appsDirectory = Join-Path $spotifyDirectory 'Apps'
+    $xpuiArchive = Join-Path $appsDirectory 'xpui.spa'
+    $unpackedIndex = Join-Path $appsDirectory 'xpui\index.html'
+    $unpackedScript = Join-Path $appsDirectory 'xpui\xpui.js'
+
+    if (-not (Test-Path -LiteralPath $spotifyExecutable -PathType Leaf)) {
+        throw 'O Spotify.exe nao foi encontrado depois da instalacao.'
+    }
+
+    $installedVersion = (Get-Item -LiteralPath $spotifyExecutable).VersionInfo.FileVersion
+    if ($installedVersion -ne '1.2.13.661') {
+        throw "A versao instalada do Spotify e $installedVersion, mas era esperada a 1.2.13.661."
+    }
+
+    if (
+        (Test-Path -LiteralPath $unpackedIndex -PathType Leaf) -and
+        (Test-Path -LiteralPath $unpackedScript -PathType Leaf)
+    ) {
+        Write-Host 'Interface do Spotify confirmada no formato descompactado.' -ForegroundColor Green
+        return
+    }
+
+    if (-not (Test-Path -LiteralPath $xpuiArchive -PathType Leaf)) {
+        throw 'A interface Apps\xpui.spa nao foi criada. O Spotify abriria com a tela preta.'
+    }
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = $null
+    try {
+        $archive = [IO.Compression.ZipFile]::OpenRead($xpuiArchive)
+        $indexEntry = $archive.GetEntry('index.html')
+        $scriptEntry = $archive.GetEntry('xpui.js')
+        if ($null -eq $indexEntry -or $null -eq $scriptEntry) {
+            throw 'O arquivo Apps\xpui.spa esta incompleto. O Spotify abriria com a tela preta.'
+        }
+    }
+    catch {
+        if ($_.Exception.Message -like 'O arquivo Apps\xpui.spa*') {
+            throw
+        }
+        throw ("Nao foi possivel validar Apps\xpui.spa: " + $_.Exception.Message)
+    }
+    finally {
+        if ($null -ne $archive) {
+            $archive.Dispose()
+        }
+    }
+
+    Write-Host 'Interface Apps\xpui.spa verificada.' -ForegroundColor Green
+}
+
 function Remove-VerifiedTempDirectory {
     param(
         [Parameter(Mandatory = $true)]
@@ -622,10 +676,8 @@ try {
     Write-Stage -Number 4 -Message 'Instalando o Spotify e aplicando o Old theme'
     Write-Host 'Esta etapa pode levar alguns minutos. A janela nao esta travada.' -ForegroundColor Yellow
 
-    if ($AllowDefenderExclusions -or $GuiMode) {
-        if ($AllowDefenderExclusions) {
-            Write-Host 'Modo interativo do Defender habilitado; responda aos prompts do SpotX.' -ForegroundColor Yellow
-        }
+    if ($AllowDefenderExclusions) {
+        Write-Host 'Modo interativo do Defender habilitado; responda aos prompts do SpotX.' -ForegroundColor Yellow
         & $windowsPowerShell -NoLogo -NoProfile -ExecutionPolicy Bypass -File $downloadedScript @spotXArguments
         $spotXExitCode = $LASTEXITCODE
     }
@@ -664,6 +716,7 @@ try {
 
         $stopwatch.Stop()
         $spotXProcess.WaitForExit()
+        $spotXProcess.Refresh()
         $spotXExitCode = $spotXProcess.ExitCode
         Write-Progress `
             -Activity 'Proxyum SpotX Old Theme Installer' `
@@ -673,8 +726,14 @@ try {
         Write-Progress -Activity 'Proxyum SpotX Old Theme Installer' -Completed
     }
 
-    if ($spotXExitCode -ne 0) {
+    if ($null -ne $spotXExitCode -and $spotXExitCode -ne 0) {
         throw "O SpotX terminou com o codigo $spotXExitCode."
+    }
+
+    Assert-SpotifyUiIntegrity
+
+    if ($null -eq $spotXExitCode) {
+        Write-Host 'Resultado confirmado pelos arquivos instalados.' -ForegroundColor Green
     }
 
     Write-Host ''

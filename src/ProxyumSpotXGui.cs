@@ -13,8 +13,8 @@ using System.Windows.Forms;
 [assembly: AssemblyCompany("Proxyum")]
 [assembly: AssemblyProduct("Proxyum SpotX Old Theme")]
 [assembly: AssemblyCopyright("Proxyum")]
-[assembly: AssemblyVersion("1.5.1.0")]
-[assembly: AssemblyFileVersion("1.5.1.0")]
+[assembly: AssemblyVersion("1.5.2.0")]
+[assembly: AssemblyFileVersion("1.5.2.0")]
 
 internal static class GuiProgram
 {
@@ -117,7 +117,7 @@ internal sealed class InstallerForm : Form
 
         Label subtitle = new Label();
         subtitle.AutoSize = true;
-        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.1";
+        subtitle.Text = "TEMA ANTIGO  |  SPOTIFY 1.2.13.661  |  VERSAO 1.5.2";
         subtitle.ForeColor = textMuted;
         subtitle.Location = new Point(222, 72);
         header.Controls.Add(subtitle);
