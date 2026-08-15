@@ -30,7 +30,7 @@ No menu voce pode instalar, reparar ou remover tudo.
 - O SpotX altera o Spotify e bloqueia atualizacoes.
 - A remocao completa tambem apaga login, cache e preferencias locais.
 - O `.exe` nao possui assinatura digital e o Windows pode mostrar um aviso do SmartScreen.
-- Sem vinculo com o Spotify. Use por sua conta e risco.
+- Sem vinculo com o Spotify.
 
 ## Autoria
 
