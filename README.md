@@ -17,7 +17,8 @@ No menu voce pode instalar, reparar ou remover tudo.
 
   **Tutorial para Windows:**
 
-  **Como DESATIVAR o WINDOWS DEFENDER no Windows 11 e 10 em 2026?**
+  **- Como DESATIVAR o WINDOWS DEFENDER no Windows 11 e 10 em 2026?**
+  
   [![Tutorial para Windows](https://img.youtube.com/vi/3fGM7dQDf8k/hqdefault.jpg)](https://sanderapps.github.io/proxyum-spotx-old-theme/)
 
 - Feche o Spotify antes de comecar.
