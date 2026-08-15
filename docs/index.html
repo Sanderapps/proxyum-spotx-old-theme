@@ -6,110 +6,226 @@
   <meta name="description" content="Instalador Proxyum SpotX Old Theme para Windows, com tutorial, recomendações e avisos.">
   <meta name="theme-color" content="#080a09">
   <title>Proxyum SpotX Old Theme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.youtube-nocookie.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <main class="page-shell">
-    <header class="brand">
-      <img
-        class="brand-logo"
-        src="https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/main/assets/LOGO%20INSTALLER.png"
-        alt="Logo do Proxyum SpotX"
-        width="76"
-        height="76"
-      >
-      <div>
-        <p class="brand-name"><span>PROXYUM</span> SPOTX</p>
-        <p class="brand-subtitle">OLD THEME INSTALLER</p>
-      </div>
-    </header>
+  <div class="ambient ambient-green" aria-hidden="true"></div>
+  <div class="ambient ambient-purple" aria-hidden="true"></div>
 
-    <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">INSTALADOR PARA WINDOWS</p>
-      <h1 id="page-title">Proxyum SpotX Old Theme</h1>
-      <p>Instale, repare ou remova tudo pelo mesmo menu.</p>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Navega&ccedil;&atilde;o principal">
+      <a class="nav-brand" href="#inicio" aria-label="Proxyum SpotX - in&iacute;cio">
+        <img
+          src="https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/main/assets/LOGO%20INSTALLER.png"
+          alt=""
+          width="42"
+          height="42"
+        >
+        <span><strong>PROXYUM</strong> SPOTX</span>
+      </a>
+      <div class="nav-links">
+        <a href="#instalador">Instalador</a>
+        <a href="#tutorial">Tutorial</a>
+        <a href="#avisos">Avisos</a>
+        <a class="nav-github" href="https://github.com/Sanderapps/proxyum-spotx-old-theme">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero" id="inicio" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> INSTALADOR PARA WINDOWS</p>
+        <h1 id="page-title">O tema antigo do Spotify, de volta.</h1>
+        <p class="hero-description">Instale, repare ou remova o Proxyum SpotX pelo mesmo menu, com um processo simples e guiado.</p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#instalador">Come&ccedil;ar agora</a>
+          <a class="button button-secondary" href="#tutorial">Ver tutorial</a>
+        </div>
+
+        <ul class="hero-tags" aria-label="Informa&ccedil;&otilde;es do projeto">
+          <li><span class="status-dot"></span> Windows 10 e 11</li>
+          <li>Spotify 1.2.13.661</li>
+          <li>Old Theme</li>
+        </ul>
+      </div>
+
+      <aside class="system-panel" aria-label="Resumo do instalador">
+        <div class="panel-topbar">
+          <span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>PROXYUM_SPOTX.EXE</span>
+        </div>
+        <div class="panel-logo">
+          <img
+            src="https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/main/assets/LOGO%20INSTALLER.png"
+            alt="Logo do Proxyum SpotX"
+            width="94"
+            height="94"
+          >
+        </div>
+        <p class="panel-brand"><span>PROXYUM</span> SPOTX</p>
+        <div class="system-lines">
+          <p><span>[SISTEMA]</span> Compatibilidade verificada <strong>OK</strong></p>
+          <p><span>[PERFIL]</span> Tema antigo carregado <strong>OK</strong></p>
+          <p><span>[STATUS]</span> Pronto para iniciar <strong>100%</strong></p>
+        </div>
+        <div class="panel-ready"><span></span> SISTEMA PRONTO</div>
+      </aside>
     </section>
 
-    <section class="content-card" aria-labelledby="installer-title">
-      <div class="section-heading">
-        <span class="section-number">01</span>
-        <h2 id="installer-title">Instalador</h2>
+    <section class="section" id="instalador" aria-labelledby="installer-title">
+      <div class="section-intro">
+        <p class="section-kicker">01 &middot; INSTALA&Ccedil;&Atilde;O</p>
+        <h2 id="installer-title">Escolha como instalar</h2>
+        <p>O PowerShell &eacute; a op&ccedil;&atilde;o recomendada. Copie o comando e execute em uma janela normal.</p>
       </div>
 
-      <p>Abra o Windows PowerShell e cole:</p>
-      <p class="recommended">RECOMENDADO</p>
-      <pre><code>irm https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/i.ps1|iex</code></pre>
+      <div class="install-layout">
+        <div class="command-area">
+          <div class="command-card">
+            <div class="command-toolbar">
+              <div class="terminal-title">
+                <span class="terminal-icon" aria-hidden="true">&gt;_</span>
+                <span>Windows PowerShell</span>
+              </div>
+              <span class="recommended-badge">RECOMENDADO</span>
+            </div>
+            <div class="command-content">
+              <code id="install-command">irm https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/i.ps1|iex</code>
+              <button class="copy-button" id="copy-command" type="button" aria-describedby="copy-status">
+                <span class="copy-icon" aria-hidden="true"></span>
+                <span class="copy-label">Copiar comando</span>
+              </button>
+            </div>
+          </div>
+          <p class="copy-status" id="copy-status" role="status" aria-live="polite">Use o bot&atilde;o para copiar sem selecionar o texto.</p>
+        </div>
 
-      <p>Prefere uma janela gr&aacute;fica? Escolha uma das op&ccedil;&otilde;es:</p>
+        <ol class="install-steps" aria-label="Passos para instalar">
+          <li>
+            <span>1</span>
+            <div><strong>Copie o comando</strong><small>Clique no bot&atilde;o ao lado do terminal.</small></div>
+          </li>
+          <li>
+            <span>2</span>
+            <div><strong>Abra o PowerShell</strong><small>N&atilde;o precisa abrir como administrador.</small></div>
+          </li>
+          <li>
+            <span>3</span>
+            <div><strong>Cole e pressione Enter</strong><small>Depois &eacute; s&oacute; acompanhar o menu.</small></div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="divider"><span>OU BAIXE UM ARQUIVO</span></div>
+
       <div class="download-grid">
-        <a class="download-card primary" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/ProxyumSpotX-Setup.exe">
-          <span>INSTALADOR VISUAL</span>
-          <strong>Baixar .exe</strong>
+        <a class="download-card featured" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/ProxyumSpotX-Setup.exe">
+          <span class="download-type">MELHOR PARA INICIANTES</span>
+          <span class="format-icon">GUI</span>
+          <div><strong>Instalador visual</strong><small>Janela gr&aacute;fica com bot&otilde;es e progresso.</small></div>
+          <span class="download-action">Baixar .exe <b>&rarr;</b></span>
         </a>
         <a class="download-card" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/ProxyumSpotX-Installer.exe">
-          <span>TERMINAL</span>
-          <strong>Baixar .exe</strong>
+          <span class="download-type">MODO TERMINAL</span>
+          <span class="format-icon">EXE</span>
+          <div><strong>Execut&aacute;vel de terminal</strong><small>Menu completo direto no console.</small></div>
+          <span class="download-action">Baixar .exe <b>&rarr;</b></span>
         </a>
         <a class="download-card" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/Instalar-ProxyumSpotX.bat">
-          <span>ARQUIVO EM LOTE</span>
-          <strong>Baixar .bat</strong>
+          <span class="download-type">ATALHO SIMPLES</span>
+          <span class="format-icon">BAT</span>
+          <div><strong>Arquivo em lote</strong><small>Dois cliques para abrir o instalador.</small></div>
+          <span class="download-action">Baixar .bat <b>&rarr;</b></span>
         </a>
       </div>
 
-      <p class="menu-note">No menu voc&ecirc; pode instalar, reparar ou remover tudo.</p>
+      <p class="menu-note"><span aria-hidden="true">i</span> No menu voc&ecirc; pode instalar, reparar ou remover tudo.</p>
     </section>
 
-    <section class="content-card" aria-labelledby="recommendations-title">
-      <div class="section-heading">
-        <span class="section-number">02</span>
+    <section class="section" id="recomendacoes" aria-labelledby="recommendations-title">
+      <div class="section-intro">
+        <p class="section-kicker">02 &middot; ANTES DE COME&Ccedil;AR</p>
         <h2 id="recommendations-title">Recomenda&ccedil;&otilde;es</h2>
+        <p>Prepare o Windows e deixe o instalador concluir cada etapa.</p>
       </div>
 
-      <ul class="check-list">
-        <li>Desative o Windows Defender.</li>
-        <li>Feche o Spotify antes de come&ccedil;ar.</li>
-        <li>Leia as perguntas e espere a barra chegar a 100%.</li>
-      </ul>
+      <div class="recommendation-grid">
+        <article class="recommendation-card">
+          <span class="recommendation-number">01</span>
+          <div><h3>Desative o Windows Defender</h3><p>Use o tutorial abaixo caso precise de ajuda.</p></div>
+        </article>
+        <article class="recommendation-card">
+          <span class="recommendation-number">02</span>
+          <div><h3>Feche o Spotify</h3><p>Encerre o aplicativo antes de come&ccedil;ar.</p></div>
+        </article>
+        <article class="recommendation-card">
+          <span class="recommendation-number">03</span>
+          <div><h3>Aguarde a conclus&atilde;o</h3><p>Leia as perguntas e espere a barra chegar a 100%.</p></div>
+        </article>
+      </div>
 
-      <div class="tutorial-block">
-        <p class="tutorial-label">TUTORIAL PARA WINDOWS</p>
-        <h3>Como DESATIVAR o WINDOWS DEFENDER temporariamente ou permanente no Windows 11 e 10 em 2026?</h3>
+      <article class="tutorial-block" id="tutorial" aria-labelledby="tutorial-title">
+        <div class="tutorial-heading">
+          <div>
+            <p class="tutorial-label"><span></span> TUTORIAL PARA WINDOWS</p>
+            <h3 id="tutorial-title">Como DESATIVAR o WINDOWS DEFENDER temporariamente ou permanente no Windows 11 e 10 em 2026?</h3>
+          </div>
+          <a class="youtube-chip" href="https://www.youtube.com/watch?v=3fGM7dQDf8k">Assistir no YouTube</a>
+        </div>
         <div class="video-frame">
           <iframe
             src="https://www.youtube-nocookie.com/embed/3fGM7dQDf8k?rel=0"
             title="Como desativar o Windows Defender no Windows 11 e 10"
+            loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
         </div>
-        <a class="youtube-link" href="https://www.youtube.com/watch?v=3fGM7dQDf8k">Abrir o tutorial no YouTube</a>
-      </div>
+      </article>
     </section>
 
-    <section class="content-card warning-card" aria-labelledby="warnings-title">
-      <div class="section-heading">
-        <span class="section-number">03</span>
-        <h2 id="warnings-title">Avisos</h2>
+    <section class="section" id="avisos" aria-labelledby="warnings-title">
+      <div class="section-intro">
+        <p class="section-kicker purple">03 &middot; LEIA COM ATEN&Ccedil;&Atilde;O</p>
+        <h2 id="warnings-title">Avisos importantes</h2>
+        <p>Estas informa&ccedil;&otilde;es ajudam a evitar surpresas durante o uso ou a remo&ccedil;&atilde;o.</p>
       </div>
 
-      <ul class="warning-list">
-        <li>Usa o Spotify 1.2.13.661 para manter o tema antigo.</li>
-        <li>O SpotX altera o Spotify e bloqueia atualiza&ccedil;&otilde;es.</li>
-        <li>A remo&ccedil;&atilde;o completa tamb&eacute;m apaga login, cache e prefer&ecirc;ncias locais.</li>
-        <li>O <code>.exe</code> n&atilde;o possui assinatura digital e o Windows pode mostrar um aviso do SmartScreen.</li>
-        <li>Sem v&iacute;nculo com o Spotify. Use por sua conta e risco.</li>
-      </ul>
+      <div class="warning-grid">
+        <article><span>VERS&Atilde;O</span><h3>Spotify antigo</h3><p>Usa o Spotify 1.2.13.661 para manter o tema antigo.</p></article>
+        <article><span>ALTERA&Ccedil;&Otilde;ES</span><h3>Atualiza&ccedil;&otilde;es bloqueadas</h3><p>O SpotX altera o Spotify e bloqueia atualiza&ccedil;&otilde;es.</p></article>
+        <article><span>REMO&Ccedil;&Atilde;O</span><h3>Dados locais apagados</h3><p>A remo&ccedil;&atilde;o completa tamb&eacute;m apaga login, cache e prefer&ecirc;ncias locais.</p></article>
+        <article><span>WINDOWS</span><h3>Aviso do SmartScreen</h3><p>O <code>.exe</code> n&atilde;o possui assinatura digital e o Windows pode mostrar um aviso do SmartScreen.</p></article>
+        <article class="warning-wide"><span>INDEPENDENTE</span><h3>Projeto sem v&iacute;nculo oficial</h3><p>Sem v&iacute;nculo com o Spotify. Use por sua conta e risco.</p></article>
+      </div>
     </section>
 
     <section class="author-card" aria-labelledby="author-title">
+      <img
+        src="https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/main/assets/LOGO%20INSTALLER.png"
+        alt=""
+        width="70"
+        height="70"
+      >
       <div>
-        <p class="eyebrow">AUTORIA</p>
+        <p class="section-kicker">AUTORIA</p>
         <h2 id="author-title">Feito e mantido por <span>Proxyum</span>.</h2>
       </div>
-      <a class="repository-link" href="https://github.com/Sanderapps/proxyum-spotx-old-theme">Ver reposit&oacute;rio</a>
+      <a class="button button-secondary" href="https://github.com/Sanderapps/proxyum-spotx-old-theme">Ver reposit&oacute;rio</a>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <p>Proxyum SpotX Old Theme <span>&middot;</span> Apenas para Windows</p>
+    <a href="#inicio">Voltar ao topo &uarr;</a>
+  </footer>
 </body>
 </html>
