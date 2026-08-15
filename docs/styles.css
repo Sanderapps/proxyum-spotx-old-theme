@@ -4,7 +4,7 @@
   --surface: #111512;
   --surface-soft: #171c18;
   --text: #f4f7f5;
-  --muted: #9da7a0;
+  --muted: #a4aea7;
   --green: #1ed760;
   --green-bright: #42f47f;
   --purple: #9c5cff;
@@ -15,21 +15,29 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(circle at 15% 10%, rgba(30, 215, 96, 0.16), transparent 30rem),
-    radial-gradient(circle at 90% 85%, rgba(156, 92, 255, 0.14), transparent 28rem),
+    radial-gradient(circle at 12% 7%, rgba(30, 215, 96, 0.16), transparent 31rem),
+    radial-gradient(circle at 92% 60%, rgba(156, 92, 255, 0.13), transparent 30rem),
     var(--background);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
 }
 
 .page-shell {
   width: min(100% - 32px, 1040px);
   margin: 0 auto;
-  padding: 40px 0 28px;
+  padding: 40px 0 48px;
 }
 
 .brand {
@@ -37,12 +45,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 38px;
 }
 
 .brand-logo {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   object-fit: contain;
   filter: drop-shadow(0 10px 25px rgba(30, 215, 96, 0.22));
 }
@@ -52,6 +60,7 @@ body {
 }
 
 .brand-name {
+  color: var(--green);
   font-size: clamp(1.45rem, 4vw, 2rem);
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -59,10 +68,6 @@ body {
 
 .brand-name span {
   color: white;
-}
-
-.brand-name {
-  color: var(--green);
 }
 
 .brand-subtitle {
@@ -73,33 +78,184 @@ body {
   letter-spacing: 0.22em;
 }
 
-.tutorial-card {
-  padding: clamp(22px, 5vw, 48px);
-  border: 1px solid var(--border);
-  border-radius: 28px;
-  background: linear-gradient(145deg, rgba(23, 28, 24, 0.96), rgba(13, 16, 14, 0.96));
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+.hero {
+  padding: clamp(26px, 6vw, 56px) 0;
+  text-align: center;
 }
 
-.eyebrow {
-  margin: 0 0 10px;
+.hero h1 {
+  max-width: 820px;
+  margin: 8px auto 14px;
+  font-size: clamp(2.7rem, 8vw, 5.4rem);
+  line-height: 0.97;
+  letter-spacing: -0.065em;
+}
+
+.hero > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.eyebrow,
+.tutorial-label {
+  margin: 0;
   color: var(--green-bright);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.76rem;
+  font-weight: 850;
   letter-spacing: 0.18em;
 }
 
-h1 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
+.content-card,
+.author-card {
+  margin-top: 22px;
+  padding: clamp(22px, 5vw, 42px);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  background: linear-gradient(145deg, rgba(23, 28, 24, 0.96), rgba(13, 16, 14, 0.97));
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.32);
 }
 
-.intro {
-  margin: 14px 0 28px;
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.section-number {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(30, 215, 96, 0.3);
+  border-radius: 50%;
+  color: var(--green);
+  background: rgba(30, 215, 96, 0.08);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  letter-spacing: -0.035em;
+}
+
+.recommended {
+  display: inline-flex;
+  margin: 8px 0 8px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: #071109;
+  background: var(--green);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+pre {
+  overflow-x: auto;
+  margin: 0 0 26px;
+  padding: 18px 20px;
+  border: 1px solid rgba(156, 92, 255, 0.32);
+  border-radius: 14px;
+  background: #070807;
+  color: #d8c9ff;
+  font-size: clamp(0.78rem, 1.8vw, 0.94rem);
+  line-height: 1.55;
+}
+
+code {
+  font-family: "Cascadia Code", Consolas, monospace;
+}
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.download-card {
+  display: flex;
+  min-height: 105px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-soft);
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.download-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(156, 92, 255, 0.55);
+}
+
+.download-card.primary {
+  border-color: rgba(30, 215, 96, 0.4);
+  background: rgba(30, 215, 96, 0.1);
+}
+
+.download-card span {
   color: var(--muted);
-  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.download-card strong {
+  color: var(--green-bright);
+  font-size: 1.05rem;
+}
+
+.menu-note {
+  margin: 22px 0 0;
+  color: var(--muted);
+}
+
+.check-list,
+.warning-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-left: 22px;
+  color: #dce2de;
+  line-height: 1.55;
+}
+
+.check-list li::marker {
+  color: var(--green);
+}
+
+.warning-list li::marker {
+  color: var(--purple);
+}
+
+.tutorial-block {
+  margin-top: 30px;
+  padding: clamp(18px, 4vw, 30px);
+  border: 1px solid rgba(156, 92, 255, 0.3);
+  border-radius: 20px;
+  background: rgba(8, 10, 9, 0.72);
+}
+
+.tutorial-block h3 {
+  max-width: 850px;
+  margin: 9px 0 22px;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  line-height: 1.25;
 }
 
 .video-frame {
@@ -108,7 +264,7 @@ h1 {
   width: 100%;
   aspect-ratio: 16 / 9;
   border: 1px solid rgba(30, 215, 96, 0.3);
-  border-radius: 18px;
+  border-radius: 16px;
   background: #000;
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.38);
 }
@@ -121,63 +277,73 @@ h1 {
   border: 0;
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.button {
+.youtube-link,
+.repository-link {
   display: inline-flex;
-  min-height: 46px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
-  border: 1px solid transparent;
+  margin-top: 18px;
+  padding: 0 19px;
   border-radius: 999px;
-  color: var(--text);
-  font-weight: 750;
+  color: #071109;
+  background: var(--green);
+  font-weight: 800;
   text-decoration: none;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition: transform 160ms ease, background 160ms ease;
 }
 
-.button:hover {
+.youtube-link:hover,
+.repository-link:hover {
   transform: translateY(-2px);
+  background: var(--green-bright);
 }
 
-.button:focus-visible {
+a:focus-visible {
   outline: 3px solid var(--purple);
   outline-offset: 3px;
 }
 
-.button-primary {
-  color: #071109;
-  background: var(--green);
+.warning-card {
+  border-color: rgba(156, 92, 255, 0.22);
 }
 
-.button-primary:hover {
-  background: var(--green-bright);
+.warning-list code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #d8c9ff;
+  background: rgba(156, 92, 255, 0.12);
 }
 
-.button-secondary {
-  border-color: var(--border);
-  background: var(--surface-soft);
+.author-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
 }
 
-.button-secondary:hover {
-  border-color: rgba(156, 92, 255, 0.55);
+.author-card h2 {
+  margin-top: 8px;
 }
 
-footer {
-  padding-top: 22px;
-  color: var(--muted);
-  text-align: center;
-  font-size: 0.86rem;
-}
-
-footer strong {
+.author-card h2 span {
   color: var(--green);
+}
+
+.repository-link {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  .download-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .author-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 560px) {
@@ -188,6 +354,7 @@ footer strong {
 
   .brand {
     justify-content: flex-start;
+    margin-bottom: 22px;
   }
 
   .brand-logo {
@@ -195,16 +362,22 @@ footer strong {
     height: 58px;
   }
 
-  .tutorial-card {
+  .hero {
+    padding: 30px 0;
+    text-align: left;
+  }
+
+  .content-card,
+  .author-card {
     border-radius: 20px;
   }
 
   .video-frame {
-    border-radius: 12px;
+    border-radius: 11px;
   }
 
-  .actions,
-  .button {
+  .youtube-link,
+  .repository-link {
     width: 100%;
   }
 }

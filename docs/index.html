@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Tutorial para Windows do Proxyum SpotX Old Theme.">
-  <meta name="theme-color" content="#0b0d0c">
-  <title>Tutorial para Windows | Proxyum SpotX</title>
+  <meta name="description" content="Instalador Proxyum SpotX Old Theme para Windows, com tutorial, recomendações e avisos.">
+  <meta name="theme-color" content="#080a09">
+  <title>Proxyum SpotX Old Theme</title>
   <link rel="preconnect" href="https://www.youtube-nocookie.com">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -16,8 +16,8 @@
         class="brand-logo"
         src="https://raw.githubusercontent.com/Sanderapps/proxyum-spotx-old-theme/main/assets/LOGO%20INSTALLER.png"
         alt="Logo do Proxyum SpotX"
-        width="72"
-        height="72"
+        width="76"
+        height="76"
       >
       <div>
         <p class="brand-name"><span>PROXYUM</span> SPOTX</p>
@@ -25,28 +25,91 @@
       </div>
     </header>
 
-    <section class="tutorial-card" aria-labelledby="tutorial-title">
-      <p class="eyebrow">TUTORIAL PARA WINDOWS</p>
-      <h1 id="tutorial-title">Assista antes de instalar</h1>
-      <p class="intro">Dê play e acompanhe o passo a passo no seu computador.</p>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">INSTALADOR PARA WINDOWS</p>
+      <h1 id="page-title">Proxyum SpotX Old Theme</h1>
+      <p>Instale, repare ou remova tudo pelo mesmo menu.</p>
+    </section>
 
-      <div class="video-frame">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/3fGM7dQDf8k?rel=0"
-          title="Tutorial do Proxyum SpotX para Windows"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
+    <section class="content-card" aria-labelledby="installer-title">
+      <div class="section-heading">
+        <span class="section-number">01</span>
+        <h2 id="installer-title">Instalador</h2>
       </div>
 
-      <div class="actions">
-        <a class="button button-primary" href="https://www.youtube.com/watch?v=3fGM7dQDf8k">Abrir no YouTube</a>
-        <a class="button button-secondary" href="https://github.com/Sanderapps/proxyum-spotx-old-theme">Voltar ao repositório</a>
+      <p>Abra o Windows PowerShell e cole:</p>
+      <p class="recommended">RECOMENDADO</p>
+      <pre><code>irm https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/i.ps1|iex</code></pre>
+
+      <p>Prefere uma janela gr&aacute;fica? Escolha uma das op&ccedil;&otilde;es:</p>
+      <div class="download-grid">
+        <a class="download-card primary" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/ProxyumSpotX-Setup.exe">
+          <span>INSTALADOR VISUAL</span>
+          <strong>Baixar .exe</strong>
+        </a>
+        <a class="download-card" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/ProxyumSpotX-Installer.exe">
+          <span>TERMINAL</span>
+          <strong>Baixar .exe</strong>
+        </a>
+        <a class="download-card" href="https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/Instalar-ProxyumSpotX.bat">
+          <span>ARQUIVO EM LOTE</span>
+          <strong>Baixar .bat</strong>
+        </a>
+      </div>
+
+      <p class="menu-note">No menu voc&ecirc; pode instalar, reparar ou remover tudo.</p>
+    </section>
+
+    <section class="content-card" aria-labelledby="recommendations-title">
+      <div class="section-heading">
+        <span class="section-number">02</span>
+        <h2 id="recommendations-title">Recomenda&ccedil;&otilde;es</h2>
+      </div>
+
+      <ul class="check-list">
+        <li>Desative o Windows Defender.</li>
+        <li>Feche o Spotify antes de come&ccedil;ar.</li>
+        <li>Leia as perguntas e espere a barra chegar a 100%.</li>
+      </ul>
+
+      <div class="tutorial-block">
+        <p class="tutorial-label">TUTORIAL PARA WINDOWS</p>
+        <h3>Como DESATIVAR o WINDOWS DEFENDER temporariamente ou permanente no Windows 11 e 10 em 2026?</h3>
+        <div class="video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/3fGM7dQDf8k?rel=0"
+            title="Como desativar o Windows Defender no Windows 11 e 10"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <a class="youtube-link" href="https://www.youtube.com/watch?v=3fGM7dQDf8k">Abrir o tutorial no YouTube</a>
       </div>
     </section>
 
-    <footer>Feito e mantido por <strong>Proxyum</strong>.</footer>
+    <section class="content-card warning-card" aria-labelledby="warnings-title">
+      <div class="section-heading">
+        <span class="section-number">03</span>
+        <h2 id="warnings-title">Avisos</h2>
+      </div>
+
+      <ul class="warning-list">
+        <li>Usa o Spotify 1.2.13.661 para manter o tema antigo.</li>
+        <li>O SpotX altera o Spotify e bloqueia atualiza&ccedil;&otilde;es.</li>
+        <li>A remo&ccedil;&atilde;o completa tamb&eacute;m apaga login, cache e prefer&ecirc;ncias locais.</li>
+        <li>O <code>.exe</code> n&atilde;o possui assinatura digital e o Windows pode mostrar um aviso do SmartScreen.</li>
+        <li>Sem v&iacute;nculo com o Spotify. Use por sua conta e risco.</li>
+      </ul>
+    </section>
+
+    <section class="author-card" aria-labelledby="author-title">
+      <div>
+        <p class="eyebrow">AUTORIA</p>
+        <h2 id="author-title">Feito e mantido por <span>Proxyum</span>.</h2>
+      </div>
+      <a class="repository-link" href="https://github.com/Sanderapps/proxyum-spotx-old-theme">Ver reposit&oacute;rio</a>
+    </section>
   </main>
 </body>
 </html>
