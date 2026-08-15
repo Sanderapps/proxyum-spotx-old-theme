@@ -12,6 +12,16 @@ Prefere uma janela grafica? [Baixe o instalador visual](https://github.com/Sande
 
 No menu voce pode instalar, reparar ou remover tudo.
 
+<!-- virustotal-report:start -->
+## Analise de seguranca
+
+O instalador visual de cada versao e analisado automaticamente pelo VirusTotal.
+
+O relatorio da versao mais recente aparecera aqui depois da primeira execucao automatica.
+
+O VirusTotal agrega resultados de varios mecanismos e nao substitui uma auditoria completa do codigo.
+<!-- virustotal-report:end -->
+
 ## Recomendacoes
 
 - Feche o Spotify antes de comecar.
