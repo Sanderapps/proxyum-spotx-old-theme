@@ -29,7 +29,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.3.1'
+$InstallerVersion = '1.3.2'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -60,6 +60,46 @@ function Write-CenteredHostLine {
     }
 }
 
+function Write-TwoColorBanner {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$LeftText,
+        [Parameter(Mandatory = $true)]
+        [string[]]$RightText
+    )
+
+    $windowWidth = 80
+    try {
+        if ([Console]::WindowWidth -gt 0) {
+            $windowWidth = [Console]::WindowWidth
+        }
+    }
+    catch {
+        $windowWidth = 80
+    }
+
+    $leftWidth = ($LeftText | ForEach-Object { $_.Length } | Measure-Object -Maximum).Maximum
+    $rightWidth = ($RightText | ForEach-Object { $_.Length } | Measure-Object -Maximum).Maximum
+    $gap = '   '
+    $totalWidth = $leftWidth + $gap.Length + $rightWidth
+
+    if ($windowWidth -lt $totalWidth) {
+        Write-CenteredHostLine -Text $LeftText -Color White
+        Write-Host ''
+        Write-CenteredHostLine -Text $RightText -Color Green
+        return
+    }
+
+    $leftPadding = [Math]::Max(0, [int](($windowWidth - $totalWidth) / 2))
+    $rowCount = [Math]::Max($LeftText.Count, $RightText.Count)
+    for ($row = 0; $row -lt $rowCount; $row++) {
+        $leftLine = if ($row -lt $LeftText.Count) { $LeftText[$row] } else { '' }
+        $rightLine = if ($row -lt $RightText.Count) { $RightText[$row] } else { '' }
+        Write-Host ((' ' * $leftPadding) + $leftLine.PadRight($leftWidth) + $gap) -ForegroundColor White -NoNewline
+        Write-Host $rightLine -ForegroundColor Green
+    }
+}
+
 function Write-ProxyumHeader {
     $proxyumBanner = @(
         '__________',
@@ -79,9 +119,7 @@ function Write-ProxyumHeader {
     )
 
     Write-Host ''
-    Write-CenteredHostLine -Text $proxyumBanner -Color White
-    Write-Host ''
-    Write-CenteredHostLine -Text $spotXBanner -Color Green
+    Write-TwoColorBanner -LeftText $proxyumBanner -RightText $spotXBanner
     Write-Host ''
     Write-CenteredHostLine `
         -Text ("INSTALADOR v{0} | SPOTIFY ALVO: {1}" -f $InstallerVersion, $SpotifyVersion) `
