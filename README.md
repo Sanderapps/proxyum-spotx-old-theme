@@ -1,4 +1,4 @@
-﻿# Proxyum SpotX Old Theme
+# Proxyum SpotX Old Theme
 
 ## Instalador
 
@@ -15,9 +15,14 @@ No menu voce pode instalar, reparar ou remover tudo.
 <!-- virustotal-report:start -->
 ## Analise de seguranca
 
-O instalador visual de cada versao e analisado automaticamente pelo VirusTotal.
+O instalador visual da versao **v1.5.2** foi analisado automaticamente pelo VirusTotal.
 
-O relatorio da versao mais recente aparecera aqui depois da primeira execucao automatica.
+**Resultado:** 4 de 75 mecanismos marcaram o arquivo como malicioso ou suspeito.
+
+[Ver o relatorio completo no VirusTotal](https://www.virustotal.com/gui/file/84d15cfe1cbbb737e82e2c3039b022f08bd01535783315f3b6677a116bf6caa0)
+
+SHA-256: 84d15cfe1cbbb737e82e2c3039b022f08bd01535783315f3b6677a116bf6caa0  
+Ultima analise: 2026-08-15 01:26:52 UTC.
 
 O VirusTotal agrega resultados de varios mecanismos e nao substitui uma auditoria completa do codigo.
 <!-- virustotal-report:end -->
