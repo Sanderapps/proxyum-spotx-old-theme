@@ -1,11 +1,11 @@
 :root {
   color-scheme: dark;
-  --bg: #050706;
-  --bg-soft: #090c0a;
-  --surface: rgba(17, 22, 18, 0.82);
-  --surface-solid: #111612;
-  --surface-raised: #171e19;
-  --surface-hover: #1b241d;
+  --bg: #000000;
+  --bg-soft: #0a0a0a;
+  --surface: #121212;
+  --surface-solid: #121212;
+  --surface-raised: #181818;
+  --surface-hover: #242424;
   --text: #f6faf7;
   --text-soft: #d1d9d3;
   --muted: #89968d;
@@ -14,10 +14,10 @@
   --green-dark: #0ca846;
   --purple: #9d62ff;
   --purple-light: #c5a1ff;
-  --cyan: #6ee7f7;
-  --yellow: #ffd166;
-  --border: rgba(255, 255, 255, 0.085);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --cyan: #b3b3b3;
+  --yellow: #b3b3b3;
+  --border: #292929;
+  --border-strong: #3a3a3a;
   --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
   --radius-xl: 30px;
   --radius-lg: 22px;
@@ -40,22 +40,9 @@ body {
   margin: 0;
   overflow-x: hidden;
   color: var(--text);
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    var(--bg);
-  background-size: 46px 46px;
+  background: var(--bg);
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
-}
-
-body::before {
-  position: fixed;
-  z-index: -3;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(5, 7, 6, 0.14), var(--bg) 92%);
-  content: "";
-  pointer-events: none;
 }
 
 ::selection {
@@ -76,29 +63,6 @@ button {
   font: inherit;
 }
 
-.ambient {
-  position: fixed;
-  z-index: -2;
-  width: 42rem;
-  height: 42rem;
-  border-radius: 50%;
-  filter: blur(110px);
-  opacity: 0.13;
-  pointer-events: none;
-}
-
-.ambient-green {
-  top: -21rem;
-  left: -16rem;
-  background: var(--green);
-}
-
-.ambient-purple {
-  right: -18rem;
-  bottom: 4rem;
-  background: var(--purple);
-}
-
 .site-header {
   position: sticky;
   z-index: 20;
@@ -117,7 +81,7 @@ button {
   padding: 10px 12px 10px 16px;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: rgba(8, 11, 9, 0.76);
+  background: rgba(10, 10, 10, 0.92);
   box-shadow: 0 14px 45px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(18px) saturate(145%);
   -webkit-backdrop-filter: blur(18px) saturate(145%);
@@ -270,7 +234,7 @@ button {
 
 .button-primary {
   color: #041108;
-  background: linear-gradient(135deg, var(--green-light), var(--green));
+  background: var(--green);
   box-shadow: 0 13px 35px rgba(30, 215, 96, 0.2), inset 0 1px rgba(255, 255, 255, 0.32);
 }
 
@@ -327,19 +291,9 @@ button {
   padding: 0 26px 26px;
   border: 1px solid rgba(30, 215, 96, 0.17);
   border-radius: 26px;
-  background:
-    linear-gradient(150deg, rgba(30, 215, 96, 0.065), transparent 45%),
-    linear-gradient(145deg, rgba(20, 27, 22, 0.98), rgba(8, 11, 9, 0.98));
+  background: var(--surface);
   box-shadow: var(--shadow), inset 0 1px rgba(255, 255, 255, 0.05);
   transform: rotate(1.2deg);
-}
-
-.system-panel::before {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.035), transparent 75%);
-  content: "";
-  pointer-events: none;
 }
 
 .panel-topbar {
@@ -455,9 +409,7 @@ button {
   scroll-margin-top: 100px;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background:
-    linear-gradient(145deg, rgba(25, 33, 27, 0.8), rgba(10, 13, 11, 0.93)),
-    var(--surface);
+  background: var(--surface);
   box-shadow: var(--shadow), inset 0 1px rgba(255, 255, 255, 0.045);
   backdrop-filter: blur(14px);
 }
@@ -716,44 +668,21 @@ button {
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+  background: var(--surface-raised);
   text-decoration: none;
   transition: transform 190ms ease, border-color 190ms ease, background 190ms ease, box-shadow 190ms ease;
-}
-
-.download-card::after {
-  position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: var(--purple);
-  content: "";
-  filter: blur(70px);
-  opacity: 0.09;
-  transition: opacity 190ms ease;
 }
 
 .download-card:hover {
   transform: translateY(-6px);
   border-color: rgba(157, 98, 255, 0.42);
-  background: linear-gradient(145deg, rgba(157, 98, 255, 0.07), rgba(255, 255, 255, 0.018));
+  background: var(--surface-hover);
   box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
-}
-
-.download-card:hover::after {
-  opacity: 0.2;
 }
 
 .download-card.featured {
   border-color: rgba(30, 215, 96, 0.29);
-  background: linear-gradient(145deg, rgba(30, 215, 96, 0.09), rgba(255, 255, 255, 0.015));
-}
-
-.download-card.featured::after {
-  background: var(--green);
-  opacity: 0.14;
+  background: var(--surface-raised);
 }
 
 .download-type {
@@ -829,14 +758,58 @@ button {
   font-size: 0.76rem;
 }
 
+.android-card {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  margin-top: 18px;
+  padding: 22px;
+  scroll-margin-top: 100px;
+  border: 1px solid rgba(157, 98, 255, 0.32);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.android-badge {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 1px solid rgba(157, 98, 255, 0.38);
+  border-radius: 18px;
+  color: var(--purple-light);
+  background: rgba(157, 98, 255, 0.1);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.android-copy .section-kicker {
+  margin-bottom: 6px;
+}
+
+.android-copy h3 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.android-copy > p:last-child {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
 .menu-note > span {
   display: grid;
   width: 21px;
   height: 21px;
   place-items: center;
-  border: 1px solid rgba(110, 231, 247, 0.24);
+  border: 1px solid rgba(157, 98, 255, 0.28);
   border-radius: 50%;
-  color: var(--cyan);
+  color: var(--purple-light);
   font-family: var(--font-mono);
   font-size: 0.62rem;
 }
@@ -866,7 +839,7 @@ button {
   place-items: center;
   border-radius: 10px;
   color: #051208;
-  background: linear-gradient(135deg, var(--green-light), var(--green));
+  background: var(--green);
   font-family: var(--font-mono);
   font-size: 0.63rem;
   font-weight: 800;
@@ -891,9 +864,7 @@ button {
   scroll-margin-top: 100px;
   border: 1px solid rgba(157, 98, 255, 0.27);
   border-radius: 25px;
-  background:
-    linear-gradient(135deg, rgba(157, 98, 255, 0.07), transparent 48%),
-    rgba(4, 6, 5, 0.65);
+  background: var(--surface-raised);
 }
 
 .tutorial-heading {
@@ -990,7 +961,7 @@ button {
   left: 0;
   width: 3px;
   height: 100%;
-  background: linear-gradient(var(--purple), transparent);
+  background: #535353;
   content: "";
 }
 
@@ -1036,7 +1007,7 @@ button {
   padding: 28px 32px;
   border: 1px solid rgba(30, 215, 96, 0.17);
   border-radius: var(--radius-xl);
-  background: linear-gradient(110deg, rgba(30, 215, 96, 0.065), rgba(157, 98, 255, 0.045));
+  background: var(--surface);
 }
 
 .author-card img {
@@ -1091,7 +1062,7 @@ button {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 3px solid var(--purple-light);
+  outline: 3px solid var(--green-light);
   outline-offset: 3px;
 }
 
@@ -1222,6 +1193,16 @@ button:focus-visible {
   .author-card {
     align-items: start;
     grid-template-columns: auto 1fr;
+  }
+
+  .android-card {
+    align-items: start;
+    grid-template-columns: auto 1fr;
+  }
+
+  .android-card .button {
+    width: 100%;
+    grid-column: 1 / -1;
   }
 
   .author-card .button {
