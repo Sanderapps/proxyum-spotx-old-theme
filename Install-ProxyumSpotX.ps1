@@ -23,13 +23,14 @@ param(
     [switch]$AllowDefenderExclusions,
     [switch]$ForceDowngrade,
     [switch]$RemoveStoreVersion,
+    [switch]$ConfirmCompleteRemoval,
     [switch]$DryRun
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$InstallerVersion = '1.4.0'
+$InstallerVersion = '1.5.0'
 $SpotifyVersion = '1.2.13.661.ga588f749'
 $SpotXCommit = '2a179d3cf0d207cc7a8b4401eaea88b3c290a30e'
 $SpotXUrl = "https://raw.githubusercontent.com/SpotX-Official/SpotX/$SpotXCommit/run.ps1"
@@ -241,14 +242,19 @@ function Remove-SpotXTempResidues {
 }
 
 function Invoke-CompleteRemoval {
+    param(
+        [switch]$Confirmed
+    )
+
     Write-Host ''
     Write-Warning 'A remocao completa apaga o Spotify, login local, cache e preferencias deste usuario.'
     Write-Warning 'Depois disso, sera preciso instalar e entrar na conta novamente.'
-    $confirmation = Read-Host 'Digite REMOVER TUDO para confirmar'
-
-    if ($confirmation -cne 'REMOVER TUDO') {
-        Write-Host 'Remocao cancelada. Nada foi alterado.' -ForegroundColor Yellow
-        return
+    if (-not $Confirmed) {
+        $confirmation = Read-Host 'Digite REMOVER TUDO para confirmar'
+        if ($confirmation -cne 'REMOVER TUDO') {
+            Write-Host 'Remocao cancelada. Nada foi alterado.' -ForegroundColor Yellow
+            return
+        }
     }
 
     Write-Progress -Activity 'Removendo Proxyum SpotX' -Status 'Fechando o Spotify (10%)' -PercentComplete 10
@@ -495,7 +501,7 @@ if ($mainAction -eq 'Exit') {
 
 if ($mainAction -eq 'Uninstall') {
     try {
-        Invoke-CompleteRemoval
+        Invoke-CompleteRemoval -Confirmed:$ConfirmCompleteRemoval
     }
     catch {
         Write-Progress -Activity 'Removendo Proxyum SpotX' -Completed

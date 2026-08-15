@@ -21,3 +21,7 @@ jobs:
       - name: Build executable
         shell: powershell
         run: .\build\Build-Exe.ps1
+
+      - name: Build graphical installer
+        shell: powershell
+        run: .\build\Build-Gui.ps1

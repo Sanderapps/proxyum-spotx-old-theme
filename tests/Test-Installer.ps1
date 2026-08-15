@@ -10,6 +10,8 @@ $bootstrapPath = Join-Path $repositoryRoot 'i.ps1'
 $batchPath = Join-Path $repositoryRoot 'Instalar-ProxyumSpotX.bat'
 $launcherSourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXLauncher.cs'
 $buildScriptPath = Join-Path $repositoryRoot 'build\Build-Exe.ps1'
+$guiSourcePath = Join-Path $repositoryRoot 'src\ProxyumSpotXGui.cs'
+$guiBuildScriptPath = Join-Path $repositoryRoot 'build\Build-Gui.ps1'
 $cmdPath = Join-Path $repositoryRoot 'Install.cmd'
 
 if (-not (Test-Path -LiteralPath $installerPath -PathType Leaf)) {
@@ -30,6 +32,14 @@ if (-not (Test-Path -LiteralPath $launcherSourcePath -PathType Leaf)) {
 
 if (-not (Test-Path -LiteralPath $buildScriptPath -PathType Leaf)) {
     throw 'Script de compilacao do executavel nao encontrado.'
+}
+
+if (-not (Test-Path -LiteralPath $guiSourcePath -PathType Leaf)) {
+    throw 'Codigo-fonte da interface grafica nao encontrado.'
+}
+
+if (-not (Test-Path -LiteralPath $guiBuildScriptPath -PathType Leaf)) {
+    throw 'Script de compilacao da interface grafica nao encontrado.'
 }
 
 if (-not (Test-Path -LiteralPath $cmdPath -PathType Leaf)) {
@@ -82,6 +92,7 @@ $requiredValues = @(
     'Remove-SafeSpotifyDirectory',
     'SpotifyAB.SpotifyMusic',
     '[switch]$Uninstall',
+    '[switch]$ConfirmCompleteRemoval',
     '$proxyumBanner',
     '$spotXBanner',
     'Write-TwoColorBanner'
@@ -99,9 +110,9 @@ $expectedHashLine = '$ExpectedSha256 = ''' + $installerHash + ''''
 if (-not $bootstrapContent.Contains($expectedHashLine)) {
     throw 'SHA-256 do instalador nao corresponde ao valor embutido no i.ps1.'
 }
-$expectedReleaseLine = '$ReleaseVersion = ''v1.4.0'''
+$expectedReleaseLine = '$ReleaseVersion = ''v1.5.0'''
 if (-not $bootstrapContent.Contains($expectedReleaseLine)) {
-    throw 'i.ps1 nao aponta para a release v1.4.0.'
+    throw 'i.ps1 nao aponta para a release v1.5.0.'
 }
 if ($bootstrapContent.Contains('[CmdletBinding()]') -or $bootstrapContent -match '(?m)^\s*param\s*\(') {
     throw 'i.ps1 nao pode ter CmdletBinding ou param no topo porque sera executado com iex.'
@@ -166,6 +177,40 @@ if (
     throw 'Build-Exe.ps1 nao compila o executavel com o instalador embutido.'
 }
 
+$guiSource = Get-Content -LiteralPath $guiSourcePath -Raw
+foreach ($requiredGuiValue in @(
+    'System.Windows.Forms',
+    'ProxyumSpotX.InstallProxyumSpotX.ps1',
+    'INSTALAR OU REPARAR',
+    'REMOVER COMPLETAMENTE',
+    '-ConfirmCompleteRemoval',
+    'CreateNoWindow = true'
+)) {
+    if (-not $guiSource.Contains($requiredGuiValue)) {
+        throw "Valor obrigatorio ausente da interface: $requiredGuiValue"
+    }
+}
+
+$guiBuildTokens = $null
+$guiBuildParseErrors = $null
+$null = [Management.Automation.Language.Parser]::ParseFile(
+    $guiBuildScriptPath,
+    [ref]$guiBuildTokens,
+    [ref]$guiBuildParseErrors
+)
+if ($guiBuildParseErrors.Count -gt 0) {
+    $messages = $guiBuildParseErrors | ForEach-Object { $_.Message }
+    throw ("Erros de sintaxe no Build-Gui.ps1: " + ($messages -join '; '))
+}
+$guiBuildContent = Get-Content -LiteralPath $guiBuildScriptPath -Raw
+if (
+    -not $guiBuildContent.Contains('/target:winexe') -or
+    -not $guiBuildContent.Contains('System.Windows.Forms.dll') -or
+    -not $guiBuildContent.Contains('/resource:')
+) {
+    throw 'Build-Gui.ps1 nao compila a interface grafica corretamente.'
+}
+
 $cmdContent = Get-Content -LiteralPath $cmdPath -Raw
 if (-not $cmdContent.Contains('Install-ProxyumSpotX.ps1')) {
     throw 'Install.cmd nao chama o instalador PowerShell.'
@@ -186,6 +231,9 @@ if (-not $readmeContent.Contains('releases/latest/download/Instalar-ProxyumSpotX
 }
 if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Installer.exe')) {
     throw 'Link do instalador .exe ausente do README.'
+}
+if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Setup.exe')) {
+    throw 'Link do instalador visual ausente do README.'
 }
 
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green
