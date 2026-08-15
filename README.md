@@ -3,7 +3,7 @@
 ## Instalador
 
 Abra o Windows PowerShell e cole:
-
+(Recomendado)
 ```powershell
 irm https://github.com/Sanderapps/proxyum-spotx-old-theme/releases/latest/download/i.ps1|iex
 ```
@@ -13,7 +13,7 @@ Prefere uma janela grafica? [Baixe o instalador visual](https://github.com/Sande
 No menu voce pode instalar, reparar ou remover tudo.
 
 ## Recomendacoes
-
+- Desative o Windows defender
 - Feche o Spotify antes de comecar.
 - Leia as perguntas e espere a barra chegar a 100%.
 
