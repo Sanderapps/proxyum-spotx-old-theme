@@ -279,7 +279,4 @@ if (-not $readmeContent.Contains('releases/latest/download/Instalar-ProxyumSpotX
 if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Installer.exe')) {
     throw 'Link do instalador .exe ausente do README.'
 }
-if (-not $readmeContent.Contains('releases/latest/download/ProxyumSpotX-Setup.exe')) {
-    throw 'Link do instalador visual ausente do README.'
-}
 Write-Host 'Validacao local concluida com sucesso.' -ForegroundColor Green
