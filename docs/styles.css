@@ -158,8 +158,7 @@ button {
 }
 
 .eyebrow,
-.section-kicker,
-.tutorial-label {
+.section-kicker {
   font-family: var(--font-mono);
 }
 
@@ -174,8 +173,7 @@ button {
   letter-spacing: 0.15em;
 }
 
-.eyebrow > span,
-.tutorial-label > span {
+.eyebrow > span {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -659,7 +657,7 @@ button {
 
 .download-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 13px;
 }
 
@@ -861,87 +859,6 @@ button {
   color: var(--muted);
   font-size: 0.71rem;
   line-height: 1.5;
-}
-
-.tutorial-block {
-  margin-top: 18px;
-  padding: clamp(18px, 3vw, 29px);
-  scroll-margin-top: 100px;
-  border: 1px solid rgba(157, 98, 255, 0.27);
-  border-radius: 25px;
-  background: var(--surface-raised);
-}
-
-.tutorial-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 22px;
-  margin-bottom: 23px;
-}
-
-.tutorial-label {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 9px;
-  color: var(--purple-light);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-}
-
-.tutorial-label > span {
-  box-shadow: 0 0 0 5px rgba(157, 98, 255, 0.1), 0 0 18px currentColor;
-}
-
-.tutorial-heading h3 {
-  max-width: 790px;
-  margin: 0;
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  line-height: 1.26;
-  letter-spacing: -0.025em;
-}
-
-.youtube-chip {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  padding: 0 15px;
-  border: 1px solid rgba(157, 98, 255, 0.3);
-  border-radius: 999px;
-  color: var(--purple-light);
-  background: rgba(157, 98, 255, 0.08);
-  font-size: 0.71rem;
-  font-weight: 800;
-  text-decoration: none;
-  transition: background 160ms ease, border-color 160ms ease;
-}
-
-.youtube-chip:hover {
-  border-color: rgba(157, 98, 255, 0.58);
-  background: rgba(157, 98, 255, 0.15);
-}
-
-.video-frame {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border: 1px solid rgba(30, 215, 96, 0.22);
-  border-radius: 18px;
-  background: black;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-}
-
-.video-frame iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
 }
 
 .warning-grid {
@@ -1183,11 +1100,6 @@ button:focus-visible {
     grid-template-columns: 34px 1fr;
   }
 
-  .tutorial-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .warning-grid {
     grid-template-columns: 1fr;
   }
@@ -1292,19 +1204,6 @@ button:focus-visible {
 
   .download-card {
     min-height: 215px;
-  }
-
-  .tutorial-block {
-    padding: 15px;
-    border-radius: 18px;
-  }
-
-  .video-frame {
-    border-radius: 11px;
-  }
-
-  .youtube-chip {
-    width: 100%;
   }
 
   .author-card {

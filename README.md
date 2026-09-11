@@ -13,14 +13,7 @@ Tambem estao disponiveis o [`.exe` de terminal](https://github.com/Sanderapps/pr
 No menu voce pode instalar, reparar ou remover tudo.
 
 ## Recomendacoes
-- Desative o Windows defender
-
-  **Tutorial para Windows:**
-
-  **- Como DESATIVAR o WINDOWS DEFENDER temporariamente ou permanente no Windows 11 e 10 em 2026?**
-  
-  [![Tutorial para Windows](https://img.youtube.com/vi/3fGM7dQDf8k/hqdefault.jpg)](https://sanderapps.github.io/proxyum-spotx-old-theme/)
-
+- Use PowerShell (recomendado), o `.exe` de terminal ou o `.bat`, conforme preferir.
 - Feche o Spotify antes de comecar.
 - Leia as perguntas e espere a barra chegar a 100%.
 
